@@ -1,3 +1,4 @@
+import pokeapi.bittle.models.pokemon.PPokemon;
 import pokeapi.bittle.models.pokemon.PokemonStat;
 import pokeapi.bittle.models.pokemon.PokemonType;
 
@@ -23,6 +24,8 @@ public class Pokemon {
     private int bSpdStat;
 
     private String type;
+    private String type2;
+    private boolean isDualType;
     private int level;
     private int hp;
     private int dexNum;
@@ -89,8 +92,36 @@ public class Pokemon {
         this.spdStat = 0;
     }
 
-    public Pokemon(String type, int level, String display, String id, int dexNum, Scanner s) {
-        this.type = type;
+    public Pokemon(String pokName, int level, Scanner s) {
+
+        PPokemon temp = PPokemon.getByName(pokName);
+        this.display = HelperMethods.capitalizeFirstLetter(pokName);
+        this.id = pokName;
+        this.bHpStat = temp.getStats().get(0).getBaseStat();
+        this.bAtkStat = temp.getStats().get(1).getBaseStat();
+        this.bDefStat = temp.getStats().get(2).getBaseStat();
+        this.bSpAtkStat = temp.getStats().get(3).getBaseStat();
+        this.bSpDefStat = temp.getStats().get(4).getBaseStat();
+        this.bSpdStat = temp.getStats().get(5).getBaseStat();
+        if (temp.getTypes().size() == 1) {
+            type = temp.getTypes().get(0).getType().getName();
+            this.isDualType = false;
+        } else if(temp.getTypes().size() == 2) {
+            type2 = temp.getTypes().get(1).getType().getName();
+            this.isDualType = true;
+        } else {
+            System.out.println("What happened here... (Pokemon Constructor)");
+        }
+        this.s = s;
+        this.level = level;
+        this.dexNum = temp.getGameIndices().get(9).getGameIndex();
+        this.notSwitched = true;
+        ArrayList<Move> possibleMoves = new ArrayList<>();
+        for (int i = 0; i < temp.getMoves().size(); i++) {
+
+        }
+
+        /*this.type = type;
         this.level = level;
         this.display = display;
         this.id = id;
@@ -98,7 +129,7 @@ public class Pokemon {
         this.s = s;
         this.notSwitched = true;
         this.moves = new Move[]{new Move(), new Move(), new Move(), new Move()};
-        this.moves[0].setMove("tackle");
+        this.moves[0].setMove("water-gun");
         System.out.println(this.moves[0]);
         this.bHpStat = 44;
         this.bAtkStat = 48;
@@ -108,7 +139,7 @@ public class Pokemon {
         this.bSpdStat = 43;
         this.initVariables();
         this.hp = this.hpStat;
-        System.out.println(hpStat + " " + atkStat + " " + defStat + " " + spAtkStat + " " + spDefStat + " " + spdStat);
+        System.out.println(hpStat + " " + atkStat + " " + defStat + " " + spAtkStat + " " + spDefStat + " " + spdStat);*/
     }
 
     public void initVariables() {
@@ -228,6 +259,98 @@ public class Pokemon {
 
     public void setHp(int hp) {
         this.hp = hp;
+    }
+
+    public int getbHpStat() {
+        return bHpStat;
+    }
+
+    public void setbHpStat(int bHpStat) {
+        this.bHpStat = bHpStat;
+    }
+
+    public int getbAtkStat() {
+        return bAtkStat;
+    }
+
+    public void setbAtkStat(int bAtkStat) {
+        this.bAtkStat = bAtkStat;
+    }
+
+    public int getbDefStat() {
+        return bDefStat;
+    }
+
+    public void setbDefStat(int bDefStat) {
+        this.bDefStat = bDefStat;
+    }
+
+    public int getbSpAtkStat() {
+        return bSpAtkStat;
+    }
+
+    public void setbSpAtkStat(int bSpAtkStat) {
+        this.bSpAtkStat = bSpAtkStat;
+    }
+
+    public int getbSpDefStat() {
+        return bSpDefStat;
+    }
+
+    public void setbSpDefStat(int bSpDefStat) {
+        this.bSpDefStat = bSpDefStat;
+    }
+
+    public int getbSpdStat() {
+        return bSpdStat;
+    }
+
+    public void setbSpdStat(int bSpdStat) {
+        this.bSpdStat = bSpdStat;
+    }
+
+    public String getType2() {
+        return type2;
+    }
+
+    public void setType2(String type2) {
+        this.type2 = type2;
+    }
+
+    public boolean isDualType() {
+        return isDualType;
+    }
+
+    public void setDualType(boolean dualType) {
+        isDualType = dualType;
+    }
+
+    public int getDexNum() {
+        return dexNum;
+    }
+
+    public void setDexNum(int dexNum) {
+        this.dexNum = dexNum;
+    }
+
+    public Move[] getMoves() {
+        return moves;
+    }
+
+    public void setMoves(Move[] moves) {
+        this.moves = moves;
+    }
+
+    public boolean isNotSwitched() {
+        return notSwitched;
+    }
+
+    public static Double[][] getMultipliers() {
+        return multipliers;
+    }
+
+    public static void setMultipliers(Double[][] multipliers) {
+        Pokemon.multipliers = multipliers;
     }
 
     public int calcDmg(Pokemon opponent) {

@@ -20,4 +20,25 @@ public class HelperMethods {
             }
         }
     }
+
+    public static String turnIntoDisplay(String id) {
+        StringBuilder sb = new StringBuilder();
+        String[] arr = id.split("-");
+        for (int i = 0; i < arr.length; i++) {
+            sb.append(capitalizeFirstLetter(arr[i]));
+            if (i != arr.length - 1) {
+                sb.append(" ");
+            }
+        }
+        return sb.toString();
+    }
+
+    public static String capitalizeFirstLetter(String word) {
+        String[] letters = word.split("");
+        word = letters[0].toUpperCase();
+        for (int i = 1; i < letters.length; i++) {
+            word = word + letters[i];
+        }
+        return word;
+    }
 }

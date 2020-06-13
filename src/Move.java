@@ -1,8 +1,8 @@
 import org.apache.commons.text.WordUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
-import pokeapi.bittle.*;
 import pokeapi.bittle.models.moves.PMove;
+
 
 
 import java.io.*;
@@ -45,15 +45,8 @@ public class Move {
         this.dmgClass = "special";
         this.type = Pokemon.Type.WATER;*/
         PMove temp = PMove.getByName(moveName);
-        StringBuilder sb = new StringBuilder();
-        String[] arr = moveName.split("-");
-        for (int i = 0; i < arr.length; i++) {
-            sb.append(WordUtils.capitalize(arr[i]));
-            if (i != arr.length - 1) {
-                sb.append(" ");
-            }
-        }
-        this.display = sb.toString();
+
+        this.display = HelperMethods.turnIntoDisplay(moveName);
         this.id = moveName;
         this.power = temp.getPower();
         this.pp = temp.getPp();
