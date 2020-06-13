@@ -1,3 +1,6 @@
+import pokeapi.bittle.models.pokemon.PokemonStat;
+import pokeapi.bittle.models.pokemon.PokemonType;
+
 import java.util.*;
 
 public class Pokemon {
@@ -19,13 +22,18 @@ public class Pokemon {
     private int bSpDefStat;
     private int bSpdStat;
 
-    private Type type;
+    private String type;
     private int level;
     private int hp;
     private int dexNum;
     private Scanner s;
     private Move[] moves;
     private boolean notSwitched;
+    // A list of base stat values for this Pokémon.
+    private ArrayList<PokemonStat> stats;
+
+    // A list of details showing types this Pokémon has.
+    private ArrayList<PokemonType> types;
 
     private static Double[][] multipliers = new Double[][] {
             new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	0.5,    1.0,	0.0,	0.5,    1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0},
@@ -81,7 +89,7 @@ public class Pokemon {
         this.spdStat = 0;
     }
 
-    public Pokemon(Type type, int level, String display, String id, int dexNum, Scanner s) {
+    public Pokemon(String type, int level, String display, String id, int dexNum, Scanner s) {
         this.type = type;
         this.level = level;
         this.display = display;
@@ -98,12 +106,13 @@ public class Pokemon {
         this.bSpAtkStat = 50;
         this.bSpDefStat = 64;
         this.bSpdStat = 43;
-        this.calcStats();
+        this.initVariables();
         this.hp = this.hpStat;
         System.out.println(hpStat + " " + atkStat + " " + defStat + " " + spAtkStat + " " + spDefStat + " " + spdStat);
     }
 
-    public void calcStats() {
+    public void initVariables() {
+
         this.atkStat = (int)Math.floor(Math.floor((2 * this.bAtkStat) * this.level / 100 + 5));
         this.defStat = (int)Math.floor(Math.floor((2 * this.bDefStat) * this.level / 100 + 5));
         this.spAtkStat = (int)Math.floor(Math.floor((2 * this.bSpAtkStat) * this.level / 100 + 5));
@@ -197,11 +206,11 @@ public class Pokemon {
         this.spdStat = spdStat;
     }
 
-    public Type getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(String type) {
         this.type = type;
     }
 

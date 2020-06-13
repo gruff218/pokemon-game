@@ -1,3 +1,5 @@
+
+
 import java.util.*;
 
 public class PokemonGameMain {
@@ -11,6 +13,7 @@ public class PokemonGameMain {
 
         Trainer user = new Trainer(userPokes);
         user.battle(pok2, s);
+
     }
 
 

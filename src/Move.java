@@ -5,11 +5,13 @@ import java.io.*;
 import java.net.*;
 
 public class Move {
+
+
     private String display;
     private String id;
     private int power;
     private int accuracy;
-    private Pokemon.Type type;
+    private String type;
     private int pp;
     private boolean isMove;
     private String dmgClass;
@@ -115,11 +117,11 @@ public class Move {
         this.accuracy = accuracy;
     }
 
-    public Pokemon.Type getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Pokemon.Type type) {
+    public void setType(String type) {
         this.type = type;
     }
 
