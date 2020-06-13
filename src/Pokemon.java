@@ -1,7 +1,7 @@
-import pokeapi.bittle.models.pokemon.PPokemon;
-import pokeapi.bittle.models.pokemon.PokemonStat;
-import pokeapi.bittle.models.pokemon.PokemonType;
+import pokeapi.bittle.models.games.VersionGroup;
+import pokeapi.bittle.models.pokemon.*;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Pokemon {
@@ -34,10 +34,12 @@ public class Pokemon {
     private boolean notSwitched;
     // A list of base stat values for this Pokémon.
     private ArrayList<PokemonStat> stats;
+    HashMap<Move, Integer> possibleMoves = new HashMap<>();
 
     // A list of details showing types this Pokémon has.
     private ArrayList<PokemonType> types;
 
+    private static Random r = new Random();
     private static Double[][] multipliers = new Double[][] {
             new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	0.5,    1.0,	0.0,	0.5,    1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0},
             new Double[] {2.0, 1.0, 0.5,	0.5,	1.0,	2.0,	0.5,	0.0,    2.0,	1.0,	1.0,	1.0,	1.0,	0.5,	2.0,	1.0,	2.0,	0.5},
@@ -116,30 +118,35 @@ public class Pokemon {
         this.level = level;
         this.dexNum = temp.getGameIndices().get(9).getGameIndex();
         this.notSwitched = true;
-        ArrayList<Move> possibleMoves = new ArrayList<>();
-        for (int i = 0; i < temp.getMoves().size(); i++) {
 
+        for (int i = 0; i < temp.getMoves().size(); i++) {
+            PokemonMove tempMove= temp.getMoves().get(i);
+            ArrayList<PokemonMoveVersion> tempVersion= tempMove.getVersionGroupDetails();
+            for (int j = 0; j < tempVersion.size(); j++) {
+                if(tempVersion.get(j).getVersionGroup().getName().equals("firered-leafgreen") && tempVersion.get(j).getMoveLearnMethod().getName().equals("level-up")) {
+                    possibleMoves.put(new Move(tempMove.getMove().getName()), tempVersion.get(j).getLevelLearnedAt());
+                }
+            }
+        }
+        ArrayList<Move> currentPossibleMoves = new ArrayList<>();
+        for (Map.Entry<Move, Integer> entry : possibleMoves.entrySet()) {
+            if (entry.getValue() <= this.level) {
+                currentPossibleMoves.add(entry.getKey());
+            }
+        }
+        for (int i = 0; i < 4; i++) {
+            if (currentPossibleMoves.size() == 0) {
+                moves[i] = new Move();
+                continue;
+            }
+            int choice = r.nextInt(currentPossibleMoves.size());
+            System.out.println(choice);
+            moves[i] = currentPossibleMoves.get(choice);
+            currentPossibleMoves.remove(choice);
         }
 
-        /*this.type = type;
-        this.level = level;
-        this.display = display;
-        this.id = id;
-        this.dexNum = dexNum;
-        this.s = s;
-        this.notSwitched = true;
-        this.moves = new Move[]{new Move(), new Move(), new Move(), new Move()};
-        this.moves[0].setMove("water-gun");
-        System.out.println(this.moves[0]);
-        this.bHpStat = 44;
-        this.bAtkStat = 48;
-        this.bDefStat = 65;
-        this.bSpAtkStat = 50;
-        this.bSpDefStat = 64;
-        this.bSpdStat = 43;
-        this.initVariables();
-        this.hp = this.hpStat;
-        System.out.println(hpStat + " " + atkStat + " " + defStat + " " + spAtkStat + " " + spDefStat + " " + spdStat);*/
+
+
     }
 
     public void initVariables() {
