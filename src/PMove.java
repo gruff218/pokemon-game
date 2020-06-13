@@ -1,10 +1,11 @@
+import models.moves.Move;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import java.io.*;
 import java.net.*;
 
-public class Move {
+public class PMove {
 
 
     private String display;
@@ -16,7 +17,7 @@ public class Move {
     private boolean isMove;
     private String dmgClass;
 
-    public Move() {
+    public PMove() {
         this.display = "";
         this.id = "";
         this.power = 0;
@@ -36,39 +37,7 @@ public class Move {
         this.isMove = true;
         this.dmgClass = "special";
         this.type = Pokemon.Type.WATER;*/
-        System.out.println(moveName);
-        System.out.println("https://pokeapi.co/api/v2/pokemon/Squirtle");
-        try {
-            URL obj = new URL("https://pokeapi.co/api/v2/move/" + moveName);
-            System.out.println(obj);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-            con.setRequestMethod("GET");
-            int responseCode = con.getResponseCode();
-            System.out.println("GET Response Code :: " + responseCode);
-            if (responseCode == HttpURLConnection.HTTP_OK) { // success
-                System.out.println("success");
-                BufferedReader in = new BufferedReader(new InputStreamReader(
-                        con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    response.append(inputLine);
-                }
-                in.close();
-                Object o = JSONValue.parse(response.toString());
-                JSONObject urlObject = (JSONObject)o;
-                this.setAccuracy((Integer)urlObject.get("accuracy"));
-                JSONObject dmgClassObject = (JSONObject)urlObject.get("damage_class");
-                this.dmgClass = (String)dmgClassObject.get("name");
-                this.pp = (Integer)urlObject.get("pp");
-                this.power = (Integer)urlObject.get("power");
-                JSONObject typeObject = (JSONObject)urlObject.get("type");
-                String type = (String)typeObject.get("name");
-            }
-        } catch (IOException e) {
-            System.out.println("sumtin went wrong brah");
-        }
+        models.moves.Move temp = models.moves.Move.getByName("water-gun");
     }
 
 
