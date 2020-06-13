@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="5b312a17-cd2d-4c62-a100-326206e90702" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/commons_text_1_8.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/PokeApi_V2_Wrapper.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/PokeApi_V2_Wrapper.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/java_json_jar.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pokemon-game.iml" beforeDir="false" afterPath="$PROJECT_DIR$/pokemon-game.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PMove.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Move.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PokemonGameMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PokemonGameMain.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1dHMtLUmt1ab1Ht8sRfEJ7PpMTV" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/PokeApi-V2-Wrapper.jar!/" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RunManager">
+    <configuration name="PokemonGameMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="PokemonGameMain" />
+      <module name="pokemon-game" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.PokemonGameMain" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5b312a17-cd2d-4c62-a100-326206e90702" name="Default Changelist" comment="" />
+      <created>1592077778050</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1592077778050</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="790" y="273" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1592078056244">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="790" y="273" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1592078056244" />
+    <state x="690" y="334" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog" timestamp="1592078005081">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="690" y="334" key="#com.intellij.util.ui.classpath.ChooseLibrariesDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1592078005081" />
+    <state x="666" y="321" key="FileChooserDialogImpl" timestamp="1592078055580">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="666" y="321" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1592078055580" />
+    <state x="440" y="154" key="SettingsEditor" timestamp="1592078137841">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="440" y="154" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1592078137841" />
+  </component>
+</project>
