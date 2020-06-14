@@ -11,10 +11,13 @@ public class PokemonGameMain {
         System.out.println(Arrays.toString(pok2.getMoves()));
         //System.out.println(Arrays.toString(pok1.getStats()));
         Pokemon[] userPokes = new Pokemon[6];
+        Pokemon[] oppPokes = new Pokemon[6];
+        oppPokes[0] = pok2;
         userPokes[0] = pok1;
 
         User user = new User(userPokes, "Will");
-        user.battle(pok2, s);
+        Trainer opponent = new Trainer(oppPokes, "Trainer Billy");
+        user.battle(opponent, s);
 
     }
 

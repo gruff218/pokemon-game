@@ -147,6 +147,7 @@ public class Pokemon {
         this.level = level;
         this.dexNum = temp.getGameIndices().get(9).getGameIndex();
         this.notSwitched = true;
+        this.trainer = null;
 
         for (int i = 0; i < temp.getMoves().size(); i++) {
             PokemonMove tempMove= temp.getMoves().get(i);
@@ -162,8 +163,6 @@ public class Pokemon {
 
     public boolean battle(Trainer user, Pokemon opponent, Scanner s) {
         boolean cont = true;
-        this.resetTempStats();
-        opponent.resetTempStats();
         System.out.println(this.getDisplay() + " is battling " + opponent.getDisplay() + "!");
         this.notSwitched = true;
         while(this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
@@ -171,7 +170,7 @@ public class Pokemon {
             cont = user.getChoice(this, opponent, s);
         }
         if (this.getHp() == 0) {
-            cont = user.pokFainted(s);
+            cont = user.checkPokes(s);
         }
         return cont;
     }
@@ -268,7 +267,7 @@ public class Pokemon {
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
-            return user.battleWon(opponent, this);
+            return user.battleWon(opponent, s);
         }
         return true;
     }
@@ -276,8 +275,12 @@ public class Pokemon {
     public void opponentAttack(Pokemon opponent) {
 
         int choice = r.nextInt(4);
-        while (!moves[choice].isMove()) {
-            choice = r.nextInt(4);
+        while (true) {
+            if (moves[choice].getDisplay().equals("Empty")) {
+                choice = r.nextInt(4);
+            } else {
+                break;
+            }
         }
         int damage = opponent.getDamage(this, choice);
         System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
