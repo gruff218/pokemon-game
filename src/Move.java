@@ -131,4 +131,16 @@ public class Move {
     public void setPp(int pp) {
         this.pp = pp;
     }
+
+    public void setMove(boolean move) {
+        isMove = move;
+    }
+
+    public String getDmgClass() {
+        return dmgClass;
+    }
+
+    public void setDmgClass(String dmgClass) {
+        this.dmgClass = dmgClass;
+    }
 }

@@ -43,4 +43,77 @@ public class HelperMethods {
     }
 
 
+    private static Double[][] multipliers = new Double[][] {
+            new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	0.5,    1.0,	0.0,	0.5,    1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0},
+            new Double[] {2.0, 1.0, 0.5,	0.5,	1.0,	2.0,	0.5,	0.0,    2.0,	1.0,	1.0,	1.0,	1.0,	0.5,	2.0,	1.0,	2.0,	0.5},
+            new Double[] {1.0, 2.0, 1.0,	1.0,	1.0,	0.5,	2.0,	1.0,	0.5,	1.0,	1.0,	2.0,	0.5,	1.0,	1.0,	1.0,	1.0,	1.0},
+            new Double[] {1.0, 1.0, 1.0,	0.5,	0.5,	0.5,	1.0,	0.5,	0.0,	1.0,	1.0,	2.0,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0},
+            new Double[] {1.0, 1.0, 0.0,	2.0,	1.0,	2.0,	0.5,	1.0,	2.0,	2.0,	1.0,	0.5,	2.0,	1.0,	1.0,	1.0,	1.0,	1.0},
+            new Double[] {1.0, 0.5, 2.0,	1.0,	0.5,	1.0,	2.0,	1.0,	0.5,	2.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	1.0},
+            new Double[] {1.0, 0.5, 0.5,	0.5,	1.0,	1.0,	1.0,	0.5,	0.5,	0.5,	1.0,	2.0,	1.0,	2.0,	1.0,	1.0,	2.0,	0.5},
+            new Double[] {0.0, 1.0, 1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	0.5,	1.0},
+            new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	0.5,	0.5,	0.5,	1.0,	0.5,	1.0,	2.0,	1.0,	1.0,	2.0},
+            new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	0.5,	2.0,	1.0,	2.0,	0.5,	0.5,	2.0,	1.0,	1.0,	2.0,	0.5,	1.0,	1.0},
+            new Double[] {1.0, 1.0, 1.0,	1.0,	2.0,	2.0,	1.0,	1.0,	1.0,	2.0,	0.5,	0.5,	1.0,	1.0,	1.0,	0.5,	1.0,	1.0},
+            new Double[] {1.0, 1.0, 0.5,	0.5,	2.0,	2.0,	0.5,	1.0,	0.5,	0.5,	2.0,	0.5,	1.0,	1.0,	1.0,	0.5,	1.0,	1.0},
+            new Double[] {1.0, 1.0, 2.0,	1.0,	0.0,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	0.5,	0.5,	1.0,	1.0,	0.5,	1.0,	1.0},
+            new Double[] {1.0, 2.0, 1.0,	2.0,	1.0,	1.0,	1.0,	1.0,	0.5,	1.0,	1.0,	1.0,	1.0,	0.5,	1.0,	1.0,	0.0,	1.0},
+            new Double[] {1.0, 1.0, 2.0,	1.0,	2.0,	1.0,	1.0,	1.0,	0.5,	0.5,	0.5,	2.0,	1.0,	1.0,	0.5,	2.0,	1.0,	1.0},
+            new Double[] {1.0, 1.0, 1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	0.5,	1.0,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	0.0},
+            new Double[] {1.0, 0.5, 1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	1.0,	1.0,	0.5,	0.5},
+            new Double[] {1.0, 2.0, 1.0,	0.5,	1.0,	1.0,	1.0,	1.0,	0.5,	0.5,	1.0,	1.0,	1.0,	1.0,	1.0,	2.0,	2.0,	1.0},
+    };
+
+    public static double calcTypeMultiplier (String attackingType, Pokemon receiver) {
+        double multiplier = multipliers[getTypeNum(attackingType)][getTypeNum(receiver.getType1())];
+        if (receiver.isDualType()) {
+            multiplier = multiplier * multipliers[getTypeNum(attackingType)][getTypeNum(receiver.getType2())];
+        }
+        return multiplier;
+    }
+
+    public static int getTypeNum(String type) {
+        if (type.equals("normal")) {
+            return 0;
+        } else if (type.equals("fighting")) {
+            return 1;
+        } else if (type.equals("flying")) {
+            return 2;
+        } else if (type.equals("poison")) {
+            return 3;
+        } else if (type.equals("ground")) {
+            return 4;
+        } else if (type.equals("rock")) {
+            return 5;
+        } else if (type.equals("bug")) {
+            return 6;
+        } else if (type.equals("ghost")) {
+            return 7;
+        } else if (type.equals("steel")) {
+            return 8;
+        } else if (type.equals("fire")) {
+            return 9;
+        } else if (type.equals("water")) {
+            return 10;
+        } else if (type.equals("grass")) {
+            return 11;
+        } else if (type.equals("electric")) {
+            return 12;
+        } else if (type.equals("psychic")) {
+            return 13;
+        } else if (type.equals("ice")) {
+            return 14;
+        } else if (type.equals("dragon")) {
+            return 15;
+        } else if (type.equals("dark")) {
+            return 16;
+        } else if (type.equals("fairy")) {
+            return 17;
+        } else {
+            System.out.println("Something went really wrong (getTypeNum)");
+            System.exit(1);
+        }
+        return -1;
+    }
+
 }
