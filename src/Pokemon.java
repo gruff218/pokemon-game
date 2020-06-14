@@ -205,12 +205,23 @@ public class Pokemon {
         String changedStat = "";
         int change = 0;
         for (Map.Entry<String, Integer> entry : move.getStatChanges().entrySet()) {
-            this.changeStat(entry.getKey(), entry.getValue());
+            String addition = this.changeStat(entry.getKey(), entry.getValue());
+            System.out.print(opponent.getDisplay() + "'s " + HelperMethods.turnIntoDisplay(entry.getKey()) + " stat was ");
+            if (entry.getValue() < 0) {
+                System.out.print("lowered");
+            } else {
+                System.out.print("raised");
+            }
+            System.out.println(" " + addition + "!");
         }
         return true;
     }
 
-    public void changeStat(String stat, int change) {
+    public String changeStat(String stat, int change) {
+        String addition = "";
+        if (Math.abs(change) == 2) {
+            addition = "significantly";
+        }
         if (stat.equals("attack")) {
             this.atkStage+=change;
         } else if (stat.equals("defense")) {
@@ -222,6 +233,7 @@ public class Pokemon {
         } else if (stat.equals("speed")) {
             this.spdStage+=change;
         }
+        return addition;
     }
 
     public boolean dealDamage(Trainer user, Pokemon opponent, int choice) {
