@@ -1,0 +1,48 @@
+Version Big Ideas:
+
+Version 1:
+The core function of the game. This version will be completely text based and have no map/story, but all game functions should work properly
+
+Version 2:
+This version will include Key Logging. Instead of using a scanner and having to press enter to complete actions, all input will be taken by a single key-pressed
+
+Version 3:
+This is where things get tricky and we start to move off text based things and into graphics. I haven't really thought this far ahead yet and future version big ideas are TBD
+
+
+
+
+VERSION 1:
+
+Already Done:
+
+Basic structure of the game
+Constructing of Pokemon and Moves based off an API
+Battle mechanics (Against wild pokemon)
+Damage calculation
+Stat calculation
+Typing and multipliers
+Stat changing moves
+
+
+To-Do List:
+
+These are things that need to be done before Version 1 can be launched:
+Trainer v Trainer battling
+Gaining xp, Leveling up, Learning moves from leveling
+Evolving
+Wild Pokemon AI
+Trainer AI (Including switching)
+ALL Bag Items (Including: Health Restores, Battle Items, Pokeballs)
+Catching a pokemon
+Testing switching pokemon in battle
+Status Effects! (Burned, Poisoned, Paralyzed, Frozen, Asleep)
+
+Included in the big idea but I have no clue how to do these:
+
+Held Items
+Abilities
+
+
+
+
