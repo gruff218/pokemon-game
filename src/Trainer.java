@@ -15,6 +15,9 @@ public class Trainer {
     public Trainer(Pokemon[] team, String name) {
         this.team = team;
         for (Pokemon pokemon : team) {
+            if (pokemon == null) {
+                continue;
+            }
             pokemon.setTrainer(this);
         }
         currentPok = null;
@@ -51,7 +54,7 @@ public class Trainer {
         } else {
             System.out.println("Something has gone horribly horribly wrong... (getChoice method)");
         }
-        this.currentPok.opponentAttack(opponent);
+        //this.currentPok.opponentAttack(opponent);
         return true;
     }
     public boolean battleWon(Pokemon opponent, Pokemon currentPok) {

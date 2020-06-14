@@ -82,6 +82,49 @@ public class Pokemon {
 
     public Pokemon(String pokName, int level, Scanner s) {
 
+        this.constructPokemon(pokName, level, s);
+
+        ArrayList<Move> currentPossibleMoves = new ArrayList<>();
+        for (Map.Entry<Move, Integer> entry : possibleMoves.entrySet()) {
+            if (entry.getValue() <= this.level) {
+                currentPossibleMoves.add(entry.getKey());
+            }
+        }
+        for (int i = 0; i < moves.length; i++) {
+            if (currentPossibleMoves.size() == 0) {
+                moves[i] = new Move();
+            } else {
+                int choice = r.nextInt(currentPossibleMoves.size());
+                moves[i] = currentPossibleMoves.get(choice);
+                currentPossibleMoves.remove(choice);
+            }
+        }
+
+        this.initVariables();
+
+    }
+    public Pokemon (String pokName, int level, Move[] moves, Scanner s) {
+        this(pokName, level, s);
+
+        if (moves.length > 4) {
+            System.out.println("A Pokemon was constructed with a moveset of more than 4 moves. This is obviously an issue.");
+            System.exit(1);
+        }
+
+        for (int i = 0; i < 4; i++) {
+              if (i >= moves.length) {
+                  this.moves[i] = new Move();
+                  continue;
+              }
+              if (moves[i] == null) {
+                  this.moves[i] = new Move();
+                  continue;
+              }
+              this.moves[i] = moves[i];
+        }
+    }
+
+    public void constructPokemon(String pokName, int level, Scanner s) {
         PPokemon temp = PPokemon.getByName(pokName);
         this.display = HelperMethods.capitalizeFirstLetter(pokName);
         this.id = pokName;
@@ -114,25 +157,7 @@ public class Pokemon {
                 }
             }
         }
-        ArrayList<Move> currentPossibleMoves = new ArrayList<>();
-        for (Map.Entry<Move, Integer> entry : possibleMoves.entrySet()) {
-            if (entry.getValue() <= this.level) {
-                currentPossibleMoves.add(entry.getKey());
-            }
-        }
         this.moves = new Move[4];
-        for (int i = 0; i < moves.length; i++) {
-            if (currentPossibleMoves.size() == 0) {
-                moves[i] = new Move();
-            } else {
-                int choice = r.nextInt(currentPossibleMoves.size());
-                moves[i] = currentPossibleMoves.get(choice);
-                currentPossibleMoves.remove(choice);
-            }
-        }
-
-        this.initVariables();
-
     }
 
     public boolean battle(Trainer user, Pokemon opponent, Scanner s) {
@@ -205,40 +230,41 @@ public class Pokemon {
         String changedStat = "";
         int change = 0;
         for (Map.Entry<String, Integer> entry : move.getStatChanges().entrySet()) {
-            String addition = this.changeStat(entry.getKey(), entry.getValue());
+            String addition = this.changeStat(entry.getKey(), entry.getValue(), opponent);
             System.out.print(opponent.getDisplay() + "'s " + HelperMethods.turnIntoDisplay(entry.getKey()) + " stat was ");
             if (entry.getValue() < 0) {
                 System.out.print("lowered");
             } else {
                 System.out.print("raised");
             }
-            System.out.println(" " + addition + "!");
+            System.out.println(addition + "!");
         }
         return true;
     }
 
-    public String changeStat(String stat, int change) {
+    public String changeStat(String stat, int change, Pokemon target) {
         String addition = "";
         if (Math.abs(change) == 2) {
-            addition = "significantly";
+            addition = " significantly";
         }
         if (stat.equals("attack")) {
-            this.atkStage+=change;
+            target.atkStage+=change;
         } else if (stat.equals("defense")) {
-            this.defStage+=change;
+            target.defStage+=change;
         } else if (stat.equals("special-attack")) {
-            this.spAtkStage+=change;
+            target.spAtkStage+=change;
         } else if (stat.equals("special-defense")) {
-            this.spDefStage+=change;
+            target.spDefStage+=change;
         } else if (stat.equals("speed")) {
-            this.spdStage+=change;
+            target.spdStage+=change;
         }
+        target.printStages();
         return addition;
     }
 
     public boolean dealDamage(Trainer user, Pokemon opponent, int choice) {
         int damage = this.getDamage(opponent, choice - 1);
-        System.out.println(choice + " " + damage);
+        System.out.println("Damage dealt: " + damage);
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
@@ -253,7 +279,7 @@ public class Pokemon {
         while (!moves[choice].isMove()) {
             choice = r.nextInt(4);
         }
-        int damage = opponent.getDamage(this, choice - 1);
+        int damage = opponent.getDamage(this, choice);
         System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
         this.setHp(this.getHp() - damage);
         if (this.getHp() < 0) {
@@ -300,6 +326,24 @@ public class Pokemon {
         this.spAtkStage = 0;
         this.spDefStage = 0;
         this.spdStage = 0;
+    }
+
+    public void printStats() {
+        System.out.println(this.display + "'s Current Stats:");
+        System.out.println("HP: " + this.hpStat + "\nAttack: " + this.atkStat + "\nDefense: " + this.defStat +
+                "\nSpecial Attack: " + this.spAtkStat + "\nSpecial Defense: " + this.spDefStat + "\nSpeed: " + this.spdStat);
+    }
+
+    public void printBaseStats() {
+        System.out.println(this.display + "'s Base Stats:");
+        System.out.println("Base HP: " + this.bHpStat + "\nBase Attack: " + this.bAtkStat + "\nBase Defense: " + this.bDefStat +
+                "\nBase Special Attack: " + this.bSpAtkStat + "\nBase Special Defense: " + this.bSpDefStat + "\nBase Speed: " + this.bSpdStat);
+    }
+
+    public void printStages() {
+        System.out.println(this.display + "'s Stages:");
+        System.out.println("Attack Stage: " + this.atkStage + "\nDefense Stage: " + this.defStage +
+                "\nSpecial Attack Stage: " + this.spAtkStage + "\nSpecial Defense Stage: " + this.spDefStage + "\nSpeed Stage: " + this.spdStage);
     }
 
     public String getDisplay() {
