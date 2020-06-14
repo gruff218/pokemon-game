@@ -415,7 +415,7 @@ public class Pokemon {
             choice = r.nextInt(4);
         }
         int damage = opponent.getDamage(this, choice - 1);
-        System.out.println(opponent.getDisplay() +" has used " + opponent.getMoves()[choice].getDisplay() + "!");
+        System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
         this.setHp(this.getHp() - damage);
         if (this.getHp() < 0) {
             this.setHp(0);
