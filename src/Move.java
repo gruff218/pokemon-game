@@ -7,6 +7,7 @@ import pokeapi.bittle.models.moves.PMove;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 
 public class Move {
 
@@ -19,6 +20,7 @@ public class Move {
     private int pp;
     private boolean isMove;
     private String dmgClass;
+    private HashMap<String, Integer> statChanges;
 
     public Move() {
         this.display = "";
@@ -54,6 +56,10 @@ public class Move {
         this.isMove = true;
         this.dmgClass = temp.getDamageClass().getName();
         this.type = temp.getType().getName();
+        statChanges = new HashMap<>();
+        for (int i = 0; i < temp.getStatChanges().size(); i++) {
+            statChanges.put(temp.getStatChanges().get(i).getStat().getName(), temp.getStatChanges().get(i).getChange());
+        }
     }
 
 
@@ -142,5 +148,13 @@ public class Move {
 
     public void setDmgClass(String dmgClass) {
         this.dmgClass = dmgClass;
+    }
+
+    public HashMap<String, Integer> getStatChanges() {
+        return statChanges;
+    }
+
+    public void setStatChanges(HashMap<String, Integer> statChanges) {
+        this.statChanges = statChanges;
     }
 }

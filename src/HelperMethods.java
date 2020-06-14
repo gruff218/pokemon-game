@@ -116,4 +116,37 @@ public class HelperMethods {
         return -1;
     }
 
+    public static double stageToMultiplier(int stage) {
+        if (stage == 0) {
+            return 1.0;
+        } else if (stage == 1) {
+            return 1.33;
+        } else if (stage == 2) {
+            return 1.66;
+        } else if (stage == 3) {
+            return 2.0;
+        } else if (stage == 4) {
+            return 2.33;
+        } else if (stage == 5) {
+            return 2.66;
+        } else if (stage == 6) {
+            return 3.0;
+        } else if (stage == -1) {
+            return 0.75;
+        } else if (stage == -2) {
+            return 0.66;
+        } else if (stage == -3) {
+            return 0.5;
+        } else if (stage == -4) {
+            return 0.43;
+        } else if (stage == -5) {
+            return 0.36;
+        } else if (stage == -6) {
+            return 0.33;
+        } else {
+            System.out.println("Something went really wrong (stageToMultiplier)");
+            return 0;
+        }
+    }
+
 }

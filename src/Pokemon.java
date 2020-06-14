@@ -1,7 +1,5 @@
-import pokeapi.bittle.models.games.VersionGroup;
 import pokeapi.bittle.models.pokemon.*;
 
-import java.lang.reflect.Array;
 import java.util.*;
 
 public class Pokemon {
@@ -15,6 +13,12 @@ public class Pokemon {
     private int spAtkStat;
     private int spDefStat;
     private int spdStat;
+
+    private int atkStage;
+    private int defStage;
+    private int spAtkStage;
+    private int spDefStage;
+    private int spdStage;
 
     private int bHpStat;
     private int bAtkStat;
@@ -32,6 +36,7 @@ public class Pokemon {
     private Scanner s;
     private Move[] moves;
     private boolean notSwitched;
+    private Trainer trainer;
     // A list of base stat values for this Pokémon.
     private ArrayList<PokemonStat> stats;
     HashMap<Move, Integer> possibleMoves = new HashMap<>();
@@ -130,6 +135,121 @@ public class Pokemon {
 
     }
 
+    public boolean battle(Trainer user, Pokemon opponent, Scanner s) {
+        boolean cont = true;
+        this.resetTempStats();
+        opponent.resetTempStats();
+        System.out.println(this.getDisplay() + " is battling " + opponent.getDisplay() + "!");
+        this.notSwitched = true;
+        while(this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
+            System.out.println("Squirtle's HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
+            cont = user.getChoice(this, opponent, s);
+        }
+        if (this.getHp() == 0) {
+            cont = user.pokFainted(s);
+        }
+        return cont;
+    }
+
+
+    public int getDamage(Pokemon opponent, int moveUsed) {
+        Move move = this.moves[moveUsed];
+        if (move.getPower() == 0) {
+            return 0;
+        }
+        int atk = 0;
+        int def = 0;
+        if (move.getDmgClass().equals("physical")) {
+            atk = (int)Math.floor(this.atkStat*HelperMethods.stageToMultiplier(this.atkStage));
+            def = (int)Math.floor(opponent.getDefStat()*HelperMethods.stageToMultiplier(opponent.getDefStage()));
+        } else if (move.getDmgClass().equals("special")) {
+            atk = (int)Math.floor(this.spAtkStat*HelperMethods.stageToMultiplier(this.spAtkStage));
+            def = (int)Math.floor(opponent.getSpDefStat()*HelperMethods.stageToMultiplier(opponent.getSpDefStage()));
+        }
+        double modifier = ((double)(r.nextInt(16)+85))/100;
+        double typeMultiplier = HelperMethods.calcTypeMultiplier(move.getType(), opponent);
+        modifier = modifier * typeMultiplier;
+        if (this.trainer instanceof User) {
+            if (typeMultiplier > 1.999999 && typeMultiplier < 2.0000001) {
+                System.out.println("It was super effective!");
+            } else if (typeMultiplier < 0.5000001 && typeMultiplier > 0.4999999) {
+                System.out.println("It was not very effective...");
+            }
+        }
+        int actingLevel = this.level;
+        if (r.nextInt(256) < Math.floor(this.spdStat)*HelperMethods.stageToMultiplier(this.spdStage) /2) {
+            actingLevel = actingLevel * 2;
+        }
+        if (move.getType().equals(this.type1) || move.getType().equals(this.type2)) {
+            modifier = modifier * 1.5;
+        }
+        int damage = (int)Math.floor((((2*actingLevel/5 + 2) * move.getPower() * atk/def)/50 + 2) * modifier);
+
+        return damage;
+    }
+
+    public boolean attack(Trainer user, Pokemon opponent, Scanner s) {
+        int choice = HelperMethods.getNumber(s, "Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
+                "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4);
+        boolean temp = true;
+        if (this.moves[choice - 1].getDmgClass().equals("status")) {
+            temp = this.affectStats(user, opponent, choice - 1);
+        } else {
+            temp = this.dealDamage(user, opponent, choice);
+        }
+        return temp;
+    }
+
+    public boolean affectStats(Trainer user, Pokemon opponent, int moveUsed) {
+        Move move = this.moves[moveUsed];
+        String changedStat = "";
+        int change = 0;
+        for (Map.Entry<String, Integer> entry : move.getStatChanges().entrySet()) {
+            this.changeStat(entry.getKey(), entry.getValue());
+        }
+        return true;
+    }
+
+    public void changeStat(String stat, int change) {
+        if (stat.equals("attack")) {
+            this.atkStage+=change;
+        } else if (stat.equals("defense")) {
+            this.defStage+=change;
+        } else if (stat.equals("special-attack")) {
+            this.spAtkStage+=change;
+        } else if (stat.equals("special-defense")) {
+            this.spDefStage+=change;
+        } else if (stat.equals("speed")) {
+            this.spdStage+=change;
+        }
+    }
+
+    public boolean dealDamage(Trainer user, Pokemon opponent, int choice) {
+        int damage = this.getDamage(opponent, choice - 1);
+        System.out.println(choice + " " + damage);
+        opponent.setHp(opponent.getHp() - damage);
+        if (opponent.getHp() < 0) {
+            opponent.setHp(0);
+            return user.battleWon(opponent, this);
+        }
+        return true;
+    }
+
+    public void opponentAttack(Pokemon opponent) {
+
+        int choice = r.nextInt(4);
+        while (!moves[choice].isMove()) {
+            choice = r.nextInt(4);
+        }
+        int damage = opponent.getDamage(this, choice - 1);
+        System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
+        this.setHp(this.getHp() - damage);
+        if (this.getHp() < 0) {
+            this.setHp(0);
+
+        }
+    }
+
     public void initVariables() {
 
         this.atkStat = (int)Math.floor(Math.floor((2 * this.bAtkStat) * this.level / 100 + 5));
@@ -160,6 +280,14 @@ public class Pokemon {
             moves[choice - 1].setMove(moveName);
             return true;
         }
+    }
+
+    public void resetTempStats() {
+        this.atkStage = 0;
+        this.defStage = 0;
+        this.spAtkStage = 0;
+        this.spDefStage = 0;
+        this.spdStage = 0;
     }
 
     public String getDisplay() {
@@ -346,81 +474,61 @@ public class Pokemon {
         return new int[]{this.hp, this.atkStat, this.defStat, this.spAtkStat, this.spDefStat, this.spdStat};
     }
 
-    public boolean battle(Trainer user, Pokemon opponent, Scanner s) {
-        boolean cont = true;
-        System.out.println(this.getDisplay() + " is battling " + opponent.getDisplay() + "!");
-        this.notSwitched = true;
-        while(this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
-            System.out.println("Squirtle's HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
-            cont = user.getChoice(this, opponent, s);
-        }
-        if (this.getHp() == 0) {
-            cont = user.pokFainted(s);
-        }
-        return cont;
+
+    public int getAtkStage() {
+        return atkStage;
     }
 
-
-    public int getDamage(Pokemon opponent, int moveUsed) {
-        Move move = this.moves[moveUsed];
-        if (move.getPower() == 0) {
-            return 0;
-        }
-        int atk = 0;
-        int def = 0;
-        if (move.getDmgClass().equals("physical")) {
-            atk = this.atkStat;
-            def = opponent.getDefStat();
-        } else if (move.getDmgClass().equals("special")) {
-            atk = this.spAtkStat;
-            def = opponent.getSpDefStat();
-        }
-        double modifier = ((double)(r.nextInt(16)+85))/100;
-        double typeMultiplier = HelperMethods.calcTypeMultiplier(move.getType(), opponent);
-        modifier = modifier * typeMultiplier;
-        if (typeMultiplier > 1.999999 && typeMultiplier < 2.0000001) {
-            System.out.println("It was super effective!");
-        } else if (typeMultiplier < 0.5000001 && typeMultiplier > 0.4999999) {
-            System.out.println("It was not very effective...");
-        }
-        int actingLevel = this.level;
-        if (r.nextInt(256) < Math.floor(this.spdStat/2)) {
-            actingLevel = actingLevel * 2;
-        }
-        if (move.getType().equals(this.type1) || move.getType().equals(this.type2)) {
-            modifier = modifier * 1.5;
-        }
-        int damage = (int)Math.floor((((2*actingLevel/5 + 2) * move.getPower() * atk/def)/50 + 2) * modifier);
-
-        return damage;
+    public void setAtkStage(int atkStage) {
+        this.atkStage = atkStage;
     }
 
-    public boolean attack(Trainer user, Pokemon opponent, Scanner s) {
-        int choice = HelperMethods.getNumber(s, "Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
-                "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4);
-        int damage = this.getDamage(opponent, choice - 1);
-        System.out.println(choice + " " + damage);
-        opponent.setHp(opponent.getHp() - damage);
-        if (opponent.getHp() < 0) {
-            opponent.setHp(0);
-            return user.battleWon(opponent, this);
-        }
-        return true;
+    public int getDefStage() {
+        return defStage;
     }
 
-    public void opponentAttack(Pokemon opponent) {
+    public void setDefStage(int defStage) {
+        this.defStage = defStage;
+    }
 
-        int choice = r.nextInt(4);
-        while (!moves[choice].isMove()) {
-            choice = r.nextInt(4);
-        }
-        int damage = opponent.getDamage(this, choice - 1);
-        System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
-        this.setHp(this.getHp() - damage);
-        if (this.getHp() < 0) {
-            this.setHp(0);
+    public int getSpAtkStage() {
+        return spAtkStage;
+    }
 
-        }
+    public void setSpAtkStage(int spAtkStage) {
+        this.spAtkStage = spAtkStage;
+    }
+
+    public int getSpDefStage() {
+        return spDefStage;
+    }
+
+    public void setSpDefStage(int spDefStage) {
+        this.spDefStage = spDefStage;
+    }
+
+    public int getSpdStage() {
+        return spdStage;
+    }
+
+    public void setSpdStage(int spdStage) {
+        this.spdStage = spdStage;
+    }
+
+    public Trainer getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+    }
+
+    public HashMap<Move, Integer> getPossibleMoves() {
+        return possibleMoves;
+    }
+
+    public void setPossibleMoves(HashMap<Move, Integer> possibleMoves) {
+        this.possibleMoves = possibleMoves;
     }
 
 

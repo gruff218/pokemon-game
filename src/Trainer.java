@@ -3,15 +3,22 @@ import java.util.*;
 public class Trainer {
     private Pokemon[] team;
     private Pokemon currentPok;
+    private String name;
+
 
     public Trainer() {
-        team = new Pokemon[6];
-        currentPok = null;
+        this.team = new Pokemon[6];
+        this.currentPok = null;
+        this.name = "";
     }
 
-    public Trainer(Pokemon[] team) {
+    public Trainer(Pokemon[] team, String name) {
         this.team = team;
+        for (Pokemon pokemon : team) {
+            pokemon.setTrainer(this);
+        }
         currentPok = null;
+        this.name = name;
     }
 
     public void battle(Pokemon opponent, Scanner s) {
@@ -82,6 +89,11 @@ public class Trainer {
         this.battleLost();
         return false;
     }
+    public void resetTempStats() {
+        for (Pokemon pokemon : team) {
+            pokemon.resetTempStats();
+        }
+    }
 
     public void battleLost() {
         System.out.println("You have no remaining pokemon!");
@@ -101,5 +113,13 @@ public class Trainer {
 
     public void setCurrentPok(Pokemon currentPok) {
         this.currentPok = currentPok;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
