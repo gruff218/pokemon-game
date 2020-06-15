@@ -14,7 +14,7 @@ This is where things get tricky and we start to move off text based things and i
 
 VERSION 1:
 
-Already Done:
+Already Completed Features:
 
 Basic structure of the game
 Constructing of Pokemon and Moves based off an API
@@ -25,12 +25,11 @@ Typing and multipliers
 Stat changing moves
 Trainer v Trainer battling
 Switching Pokemon (Both user and opponenet)
+Gaining xp, Leveling up, Learning moves from leveling
 
 
 To-Do List:
 
-These are things that need to be done before Version 1 can be launched:
-Gaining xp, Leveling up, Learning moves from leveling
 Evolving
 Wild Pokemon AI (Something other than random)
 Trainer AI (Including smart switching)

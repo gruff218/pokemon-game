@@ -15,7 +15,20 @@ public class Trainer {
     }
 
     public Trainer(Pokemon[] team, String name) {
-        this.team = team;
+        if (team.length < 6) {
+            this.team = new Pokemon[6];
+            for (int i = 0; i < team.length; i++) {
+                this.team[i] = team[i];
+            }
+        } else if (team.length > 6) {
+            System.out.println("A Trainer was created with team of more than 6 (Don't worry we chopped off anything extra)");
+            this.team = new Pokemon[6];
+            for (int i = 0; i < 6; i++) {
+                this.team[i] = team[i];
+            }
+        } else {
+            this.team = team;
+        }
         for (Pokemon pokemon : team) {
             if (pokemon == null) {
                 continue;
@@ -27,120 +40,14 @@ public class Trainer {
         this.switched = false;
     }
 
-    public boolean battle(Pokemon opponent, Scanner s) {
-        if (opponent.getTrainer() == null) {
-            System.out.println("A wild " + opponent.getDisplay() + " has appeared!");
-            this.resetTempStats();
-        } else {
-            System.out.println(opponent.getTrainer().getName() + " has sent out " + opponent.getDisplay() + "!");
-        }
-        boolean cont = true;
-        for (int i = 0; i < 6; i++) {
-            if (team[i] != null) {
-                this.currentPok = this.team[i];
-                break;
-            }
-        }
-        while(cont) {
-            cont = currentPok.battle(this, opponent, s);
-            if (opponent.getTrainer() != null && !switched) {
-                cont = !cont;
-                this.switched = !switched;
-            }
-        }
-        if (opponent.getTrainer() == null) {
-            System.out.println("Battle finished");
-            return false;
-        }
-
-        return opponent.getTrainer().checkPokes();
-    }
-
-    public void battle(Trainer opponent, Scanner s) {
-        System.out.println("You are battling " + opponent.getName() + "!");
-        this.resetTempStats();
-        opponent.resetTempStats();
-        boolean cont = true;
-        boolean currentPokNotChosen = true;
-        boolean opponentCurrentPokNotChosen = true;
-        for (int i = 0; i < 6; i++) {
-            if (team[i] != null && currentPokNotChosen) {
-                this.currentPok = this.team[i];
-                currentPokNotChosen = false;
-            }
-            if (opponent.getTeam()[i] != null && opponentCurrentPokNotChosen) {
-                opponent.setCurrentPok(opponent.getTeam()[i]);
-                opponentCurrentPokNotChosen = false;
-            }
-            if (!opponentCurrentPokNotChosen && !currentPokNotChosen) {
-                break;
-            }
-        }
-        while (cont) {
-            cont = this.battle(opponent.getCurrentPok(), s);
-            System.out.println(opponent.getCurrentPok());
-        }
-
-        System.out.println("Battle finished");
-    }
-
-    public boolean getChoice(Pokemon currentPok, Pokemon opponent, Scanner s) {
-        int choice = HelperMethods.getNumber(s,"Would you like to:\n1) Attack\n2) Switch\n3) Bag\n4) Run\nEnter a number from:", 1, 4);
-        if (choice == 1) {
-            boolean temp = currentPok.attack(opponent, s);
-            if (temp && opponent.getHp() > 0) {
-                System.out.println(opponent);
-                opponent.attack(this.currentPok, s);
-            }
-            return temp;
-        } else if (choice == 2) {
-            this.switchPokemon(s);
-        } else if (choice == 3) {
-
-        } else if (choice == 4) {
-
-        } else {
-            System.out.println("Something has gone horribly horribly wrong... (getChoice method)");
-        }
-        opponent.attack(this.currentPok, s);
-        return true;
-    }
-    public boolean battleWon(Pokemon opponent, Scanner s) {
-        System.out.println(opponent.getDisplay() + " has fainted!");
-        if (opponent.getTrainer() != null) {
-            return opponent.getTrainer().checkPokes(s);
-        } else {
-            return false;
-        }
-    }
-
-
 
     public void switchPokemon(Scanner s) {
-        if (this instanceof User) {
-            boolean badPoke = true;
-            while (badPoke) {
-                int choice = HelperMethods.getNumber(s, "Which pokemon would you like to switch to?", 1, 6);
-                if (this.team[choice - 1] == null) {
-                    System.out.println("You don't have a pokemon in that slot");
-                } else if (this.team[choice - 1].getHp() <= 0) {
-                    System.out.println(this.team[choice - 1].getDisplay() + " is fainted!");
-                } else {
-                    this.currentPok.setNotSwitched(false);
-                    this.currentPok = this.team[choice - 1];
-                    badPoke = false;
-                    System.out.println("You sent out " + this.currentPok.getDisplay() + "!");
+        for (int i = 0; i < this.team.length; i++) {
+            if (this.team[i] != null) {
+                if (this.team[i].getHp() > 0) {
+                    this.currentPok = this.team[i];
                     this.switched = true;
-                }
-            }
-        } else {
-            for (int i = 0; i < this.team.length; i++) {
-                if (this.team[i] != null) {
-                    if (this.team[i].getHp() > 0) {
-                        this.currentPok = this.team[i];
-                        System.out.println(this.getName() + " sent out " + this.currentPok.getDisplay() + "!");
-                        break;
-                    }
+                    break;
                 }
             }
         }
@@ -158,6 +65,7 @@ public class Trainer {
         this.battleLost();
         return false;
     }
+
     public boolean checkPokes() {
         for (int i = 0; i < 6; i++) {
             if (this.team[i] != null) {
@@ -168,6 +76,7 @@ public class Trainer {
         }
         return false;
     }
+
     public void resetTempStats() {
         for (Pokemon pokemon : team) {
             if (pokemon != null) {
@@ -177,12 +86,35 @@ public class Trainer {
 
     }
 
-    public void battleLost() {
-        if (this instanceof User) {
-            System.out.println("You have no remaining pokemon!");
-        } else {
-            System.out.println(this.getName() + " has no remaining pokemon!");
+    public void battleWon(Pokemon opponent, Scanner s) {
+        System.out.println(opponent.getDisplay() + " has fainted!");
+        this.getCurrentPok().addXp(opponent.getBaseXp(), s);
+        if (opponent.getTrainer() != null) {
+            opponent.getTrainer().checkPokes(s);
         }
+    }
+
+    public void battleLost() {
+        System.out.println(this.getName() + " has no remaining pokemon!");
+
+    }
+
+    public String getTeamDisplay() {
+        String display = "";
+        for (int i = 0; i < 6; i++) {
+            display += "Slot " + i + ": ";
+
+            if (this.team[i] != null) {
+                display += this.team[i].getDisplay() + " HP: " + this.team[i].getHp() + "/" + this.team[i].getHpStat();
+            } else {
+                display += "Empty";
+            }
+
+            if (i != 5) {
+                display += "\n";
+            }
+        }
+        return display;
     }
 
     public Pokemon[] getTeam() {
@@ -207,5 +139,13 @@ public class Trainer {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean getSwitched() {
+        return switched;
+    }
+
+    public void setSwitched(boolean switched) {
+        this.switched = switched;
     }
 }
