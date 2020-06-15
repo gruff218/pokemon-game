@@ -166,7 +166,7 @@ public class Pokemon {
         System.out.println(this.getDisplay() + " is battling " + opponent.getDisplay() + "!");
         this.notSwitched = true;
         while(this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
-            System.out.println("Squirtle's HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
+            System.out.println(this.getDisplay() + "'s HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
             cont = user.getChoice(this, opponent, s);
         }
         if (this.getHp() == 0) {
@@ -212,19 +212,39 @@ public class Pokemon {
         return damage;
     }
 
-    public boolean attack(Trainer user, Pokemon opponent, Scanner s) {
-        int choice = HelperMethods.getNumber(s, "Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
-                "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4);
+    public boolean attack(Pokemon opponent, Scanner s) {
         boolean temp = true;
-        if (this.moves[choice - 1].getDmgClass().equals("status")) {
-            temp = this.affectStats(user, opponent, choice - 1);
+        int choice = -1;
+        if (this.trainer instanceof  User) {
+            choice = HelperMethods.getNumber(s, "Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
+                    "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4) - 1;
+
+            if (this.moves[choice].getDmgClass().equals("status")) {
+                temp = this.affectStats(opponent, choice);
+            } else {
+                temp = this.dealDamage(opponent, choice);
+            }
+            System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
         } else {
-            temp = this.dealDamage(user, opponent, choice);
+            choice = r.nextInt(4);
+            while (true) {
+                if (this.getMoves()[choice].getDisplay().equals("Empty")) {
+                    choice = r.nextInt(4);
+                } else {
+                    break;
+                }
+            }
+            System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
+            if (this.getMoves()[choice].getDmgClass().equals("status")) {
+                temp = this.affectStats(opponent, choice);
+            } else if (opponent.getMoves()[choice].getDmgClass().equals("physical")) {
+                temp = this.dealDamage(opponent, choice);
+            }
         }
         return temp;
     }
 
-    public boolean affectStats(Trainer user, Pokemon opponent, int moveUsed) {
+    public boolean affectStats(Pokemon opponent, int moveUsed) {
         Move move = this.moves[moveUsed];
         String changedStat = "";
         int change = 0;
@@ -257,39 +277,21 @@ public class Pokemon {
         } else if (stat.equals("speed")) {
             target.spdStage+=change;
         }
-        target.printStages();
+        //target.printStages();
         return addition;
     }
 
-    public boolean dealDamage(Trainer user, Pokemon opponent, int choice) {
-        int damage = this.getDamage(opponent, choice - 1);
+    public boolean dealDamage(Pokemon opponent, int choice) {
+        int damage = this.getDamage(opponent, choice);
         System.out.println("Damage dealt: " + damage);
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
-            return user.battleWon(opponent, s);
+            return this.trainer.battleWon(opponent, s);
         }
         return true;
     }
 
-    public void opponentAttack(Pokemon opponent) {
-
-        int choice = r.nextInt(4);
-        while (true) {
-            if (moves[choice].getDisplay().equals("Empty")) {
-                choice = r.nextInt(4);
-            } else {
-                break;
-            }
-        }
-        int damage = opponent.getDamage(this, choice);
-        System.out.println(opponent.getDisplay() + " has used " + opponent.getMoves()[choice].getDisplay() + "!");
-        this.setHp(this.getHp() - damage);
-        if (this.getHp() < 0) {
-            this.setHp(0);
-
-        }
-    }
 
     public void initVariables() {
 
@@ -590,6 +592,59 @@ public class Pokemon {
         this.possibleMoves = possibleMoves;
     }
 
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                "id='" + id + '\'' +
+                ", hpStat=" + hpStat +
+                ", atkStat=" + atkStat +
+                ", defStat=" + defStat +
+                ", spAtkStat=" + spAtkStat +
+                ", spDefStat=" + spDefStat +
+                ", spdStat=" + spdStat +
+                ", type1='" + type1 + '\'' +
+                ", type2='" + type2 + '\'' +
+                ", isDualType=" + isDualType +
+                ", level=" + level +
+                ", hp=" + hp +
+                ", moves=" + Arrays.toString(moves) +
+                '}';
+    }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pokemon pokemon = (Pokemon) o;
+        return hpStat == pokemon.hpStat &&
+                atkStat == pokemon.atkStat &&
+                defStat == pokemon.defStat &&
+                spAtkStat == pokemon.spAtkStat &&
+                spDefStat == pokemon.spDefStat &&
+                spdStat == pokemon.spdStat &&
+                bHpStat == pokemon.bHpStat &&
+                bAtkStat == pokemon.bAtkStat &&
+                bDefStat == pokemon.bDefStat &&
+                bSpAtkStat == pokemon.bSpAtkStat &&
+                bSpDefStat == pokemon.bSpDefStat &&
+                bSpdStat == pokemon.bSpdStat &&
+                isDualType == pokemon.isDualType &&
+                level == pokemon.level &&
+                hp == pokemon.hp &&
+                dexNum == pokemon.dexNum &&
+                notSwitched == pokemon.notSwitched &&
+                Objects.equals(display, pokemon.display) &&
+                Objects.equals(id, pokemon.id) &&
+                Objects.equals(type1, pokemon.type1) &&
+                Objects.equals(type2, pokemon.type2) &&
+                Arrays.equals(moves, pokemon.moves) &&
+                Objects.equals(possibleMoves, pokemon.possibleMoves);
+    }
 
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(display, id, hpStat, atkStat, defStat, spAtkStat, spDefStat, spdStat, bHpStat, bAtkStat, bDefStat, bSpAtkStat, bSpDefStat, bSpdStat, type1, type2, isDualType, level, hp, dexNum, notSwitched, possibleMoves);
+        result = 31 * result + Arrays.hashCode(moves);
+        return result;
+    }
 }

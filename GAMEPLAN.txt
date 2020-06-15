@@ -23,19 +23,19 @@ Damage calculation
 Stat calculation
 Typing and multipliers
 Stat changing moves
+Trainer v Trainer battling
+Switching Pokemon (Both user and opponenet)
 
 
 To-Do List:
 
 These are things that need to be done before Version 1 can be launched:
-Trainer v Trainer battling
 Gaining xp, Leveling up, Learning moves from leveling
 Evolving
-Wild Pokemon AI
-Trainer AI (Including switching)
+Wild Pokemon AI (Something other than random)
+Trainer AI (Including smart switching)
 ALL Bag Items (Including: Health Restores, Battle Items, Pokeballs)
 Catching a pokemon
-Testing switching pokemon in battle
 Status Effects! (Burned, Poisoned, Paralyzed, Frozen, Asleep)
 
 Included in the big idea but I have no clue how to do these:
