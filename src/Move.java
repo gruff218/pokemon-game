@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 
-public class Move {
+public class Move extends GameComponent {
 
 
     private String display;
@@ -21,6 +21,8 @@ public class Move {
     private boolean isMove;
     private String dmgClass;
     private HashMap<String, Integer> statChanges;
+    private int ailmentChance;
+    private String ailment;
 
     public Move() {
         this.display = "";
@@ -31,6 +33,7 @@ public class Move {
         this.pp = 0;
         this.isMove = false;
         this.dmgClass = "";
+        this.ailmentChance = 0;
     }
 
     public Move(String moveName) {
@@ -60,6 +63,8 @@ public class Move {
         for (int i = 0; i < temp.getStatChanges().size(); i++) {
             statChanges.put(temp.getStatChanges().get(i).getStat().getName(), temp.getStatChanges().get(i).getChange());
         }
+        this.ailmentChance = temp.getMeta().getAilmentChance();
+        this.ailment = temp.getMeta().getAilment().getName();
     }
 
 

@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Trainer {
+public class Trainer extends GameComponent {
     private Pokemon[] team;
     private Pokemon currentPok;
     private String name;
@@ -41,7 +41,7 @@ public class Trainer {
     }
 
 
-    public void switchPokemon(Scanner s) {
+    public void switchPokemon() {
         for (int i = 0; i < this.team.length; i++) {
             if (this.team[i] != null) {
                 if (this.team[i].getHp() > 0) {
@@ -53,11 +53,11 @@ public class Trainer {
         }
     }
 
-    public boolean checkPokes(Scanner s) {
+    public boolean checkPokes() {
         for (int i = 0; i < 6; i++) {
             if (this.team[i] != null) {
                 if (this.team[i].getHp() > 0) {
-                    this.switchPokemon(s);
+                    this.switchPokemon();
                     return true;
                 }
             }
@@ -66,7 +66,7 @@ public class Trainer {
         return false;
     }
 
-    public boolean checkPokes() {
+    public boolean checkPokeHP() {
         for (int i = 0; i < 6; i++) {
             if (this.team[i] != null) {
                 if (this.team[i].getHp() > 0) {
@@ -86,11 +86,11 @@ public class Trainer {
 
     }
 
-    public void battleWon(Pokemon opponent, Scanner s) {
+    public void battleWon(Pokemon opponent) {
         System.out.println(opponent.getDisplay() + " has fainted!");
-        this.getCurrentPok().addXp(opponent.getBaseXp(), s);
+        this.getCurrentPok().addXp(opponent.getBaseXp());
         if (opponent.getTrainer() != null) {
-            opponent.getTrainer().checkPokes(s);
+            opponent.getTrainer().checkPokeHP();
         }
     }
 
@@ -102,7 +102,7 @@ public class Trainer {
     public String getTeamDisplay() {
         String display = "";
         for (int i = 0; i < 6; i++) {
-            display += "Slot " + i + ": ";
+            display += "Slot " + (i + 1) + ": ";
 
             if (this.team[i] != null) {
                 display += this.team[i].getDisplay() + " HP: " + this.team[i].getHp() + "/" + this.team[i].getHpStat();

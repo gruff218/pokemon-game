@@ -2,7 +2,7 @@ import pokeapi.bittle.models.pokemon.*;
 
 import java.util.*;
 
-public class Pokemon {
+public class Pokemon extends GameComponent {
 
     private String display;
     private String id;
@@ -33,16 +33,18 @@ public class Pokemon {
     private int level;
     private int hp;
     private int dexNum;
-    private Scanner s;
     private Move[] moves;
     private boolean notSwitched;
     private Trainer trainer;
     // A list of base stat values for this Pokémon.
     private ArrayList<PokemonStat> stats;
-    HashMap<Move, Integer> possibleMoves = new HashMap<>();
-    int baseXp;
-    int xp;
-    int xpToNextLevel;
+    private HashMap<Move, Integer> possibleMoves = new HashMap<>();
+    private int baseXp;
+    private int xp;
+    private int xpToNextLevel;
+    private String ailment;
+    private int movesUntilNoAilment;
+    private double burn;
 
     // A list of details showing types this Pokémon has.
     private ArrayList<PokemonType> types;
@@ -82,9 +84,9 @@ public class Pokemon {
         this.spdStat = 0;
     }
 
-    public Pokemon(String pokName, int level, Scanner s) {
+    public Pokemon(String pokName, int level) {
 
-        this.constructPokemon(pokName, level, s);
+        this.constructPokemon(pokName, level);
 
         ArrayList<Move> currentPossibleMoves = new ArrayList<>();
         for (Map.Entry<Move, Integer> entry : possibleMoves.entrySet()) {
@@ -106,8 +108,8 @@ public class Pokemon {
 
     }
 
-    public Pokemon(String pokName, int level, Move[] moves, Scanner s) {
-        this(pokName, level, s);
+    public Pokemon(String pokName, int level, Move[] moves) {
+        this(pokName, level);
 
         if (moves.length > 4) {
             System.out.println("A Pokemon was constructed with a moveset of more than 4 moves. This is obviously an issue.");
@@ -127,7 +129,7 @@ public class Pokemon {
         }
     }
 
-    public void constructPokemon(String pokName, int level, Scanner s) {
+    public void constructPokemon(String pokName, int level) {
         PPokemon temp = PPokemon.getByName(pokName);
         this.display = HelperMethods.capitalizeFirstLetter(pokName);
         this.id = pokName;
@@ -146,14 +148,12 @@ public class Pokemon {
         } else {
             System.out.println("What happened here... (Pokemon Constructor)");
         }
-        this.s = s;
         this.level = level;
         this.dexNum = temp.getGameIndices().get(9).getGameIndex();
         this.notSwitched = true;
         this.trainer = null;
         this.baseXp = temp.getBaseExperience();
         this.xp = 0;
-
 
         for (int i = 0; i < temp.getMoves().size(); i++) {
             PokemonMove tempMove = temp.getMoves().get(i);
@@ -165,17 +165,18 @@ public class Pokemon {
             }
         }
         this.moves = new Move[4];
+        this.ailment = "none";
+        this.burn = 1.0;
     }
 
-    public void battle(User user, Pokemon opponent, Scanner s) {
-        System.out.println(this.getDisplay() + " is battling " + opponent.getDisplay() + "!");
+    public void battle(User user, Pokemon opponent) {
         this.notSwitched = true;
         while (this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
             System.out.println(this.getDisplay() + "'s HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
-            user.getChoice(this, opponent, s);
+            user.getChoice(this, opponent);
         }
         if (this.getHp() == 0) {
-            user.checkPokes(s);
+            user.checkPokes();
         }
     }
 
@@ -188,7 +189,7 @@ public class Pokemon {
         int atk = 0;
         int def = 0;
         if (move.getDmgClass().equals("physical")) {
-            atk = (int) Math.floor(this.atkStat * HelperMethods.stageToMultiplier(this.atkStage));
+            atk = (int) (Math.floor(this.atkStat * HelperMethods.stageToMultiplier(this.atkStage)) * this.burn);
             def = (int) Math.floor(opponent.getDefStat() * HelperMethods.stageToMultiplier(opponent.getDefStage()));
         } else if (move.getDmgClass().equals("special")) {
             atk = (int) Math.floor(this.spAtkStat * HelperMethods.stageToMultiplier(this.spAtkStage));
@@ -197,12 +198,10 @@ public class Pokemon {
         double modifier = ((double) (r.nextInt(16) + 85)) / 100;
         double typeMultiplier = HelperMethods.calcTypeMultiplier(move.getType(), opponent);
         modifier = modifier * typeMultiplier;
-        if (this.trainer instanceof User) {
-            if (typeMultiplier > 1.999999 && typeMultiplier < 2.0000001) {
-                System.out.println("It was super effective!");
-            } else if (typeMultiplier < 0.5000001 && typeMultiplier > 0.4999999) {
-                System.out.println("It was not very effective...");
-            }
+        if (typeMultiplier > 1.999999 && typeMultiplier < 2.0000001) {
+            System.out.println("It was super effective!");
+        } else if (typeMultiplier < 0.5000001 && typeMultiplier > 0.4999999) {
+            System.out.println("It was not very effective...");
         }
         int actingLevel = this.level;
         if (r.nextInt(256) < Math.floor(this.spdStat) * HelperMethods.stageToMultiplier(this.spdStage) / 2) {
@@ -216,17 +215,12 @@ public class Pokemon {
         return damage;
     }
 
-    public void attack(Pokemon opponent, Scanner s) {
+    public void attack(Pokemon opponent) {
         int choice = -1;
         if (this.trainer instanceof User) {
-            choice = HelperMethods.getNumber(s, "Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
+            choice = HelperMethods.getNumber("Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
                     "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4) - 1;
-            System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
-            if (this.moves[choice].getDmgClass().equals("status")) {
-                this.affectStats(opponent, choice);
-            } else {
-                this.dealDamage(opponent, choice);
-            }
+            this.attackChosen(opponent, choice);
         } else {
             choice = r.nextInt(4);
             while (true) {
@@ -236,12 +230,33 @@ public class Pokemon {
                     break;
                 }
             }
-            System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
-            if (this.getMoves()[choice].getDmgClass().equals("status")) {
-                this.affectStats(opponent, choice);
-            } else if (opponent.getMoves()[choice].getDmgClass().equals("physical")) {
-                this.dealDamage(opponent, choice);
+            this.attackChosen(opponent, choice);
+        }
+    }
+
+    public void attackChosen(Pokemon opponent, int choice) {
+        if (this.ailment.equals("sleep")) {
+            this.movesUntilNoAilment--;
+            if (this.movesUntilNoAilment == 0) {
+                System.out.println(this.display + " has woken up!");
+                this.doAttack(opponent, choice);
+            } else {
+                System.out.println(this.display + " is fast asleep...");
             }
+        } else if (this.ailment.equals("burn")) {
+            this.doAttack(opponent, choice);
+            System.out.println(this.display + " has taken damage from it's burn!");
+            opponent.dealDamage((int)(this.hpStat/16), this);
+        }
+
+    }
+
+    public void doAttack(Pokemon opponent, int choice) {
+        System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
+        if (this.getMoves()[choice].getDmgClass().equals("status")) {
+            this.affectStats(opponent, choice);
+        } else {
+            this.dealDamage(opponent, choice);
         }
     }
 
@@ -288,7 +303,16 @@ public class Pokemon {
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
-            this.trainer.battleWon(opponent, s);
+            this.trainer.battleWon(opponent);
+        }
+    }
+
+    public void dealDamage(int damage, Pokemon opponent) {
+        System.out.println("Damage dealt: " + damage);
+        opponent.setHp(opponent.getHp() - damage);
+        if (opponent.getHp() < 0) {
+            opponent.setHp(0);
+            this.trainer.battleWon(opponent);
         }
     }
 
@@ -312,6 +336,7 @@ public class Pokemon {
         this.hpStat = hp;
         this.hp = this.hpStat;
         this.xpToNextLevel = (this.level + 1) * (this.level + 1) * (this.level + 1) - (this.level) * (this.level) * (this.level);
+        this.movesUntilNoAilment = 0;
     }
 
     public void printStatChanges(int atk, int def, int spAtk, int spDef, int spd, int hp) {
@@ -323,39 +348,39 @@ public class Pokemon {
         System.out.println("Speed: " + this.spdStat + " --> " + spd);
     }
 
-    public boolean checkIfLeveledUp(Scanner s) {
+    public boolean checkIfLeveledUp() {
         if (this.xp >= this.xpToNextLevel) {
             this.xp -= this.xpToNextLevel;
             this.level++;
             this.initVariables(false);
-            this.checkIfLearnedMove(s);
+            this.checkIfLearnedMove();
             return true;
         } else {
             return false;
         }
     }
 
-    public void checkIfLearnedMove(Scanner s) {
+    public void checkIfLearnedMove() {
         for (Map.Entry<Move, Integer> entry : this.possibleMoves.entrySet()) {
             if (this.level == entry.getValue()) {
-                this.learn(entry.getKey(), s);
+                this.learn(entry.getKey());
             }
         }
     }
 
-    public boolean learn(String moveName, Scanner s) {
+    public boolean learn(String moveName) {
         Move move = new Move(moveName);
-        return this.learn(move, s);
+        return this.learn(move);
     }
 
-    public boolean learn(Move move, Scanner s) {
+    public boolean learn(Move move) {
         for (int i = 0; i < 4; i++) {
             if (!moves[i].isMove()) {
                 moves[i] = move;
                 return true;
             }
         }
-        int choice = HelperMethods.getNumber(s, this.display + " already knows four moves. Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
+        int choice = HelperMethods.getNumber(this.display + " already knows four moves. Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
                 ".\n1) " + moves[0].getDisplay() + "    2) " + moves[1].getDisplay() +
                 "\n3) " + moves[2].getDisplay() + "    4) " + moves[3].getDisplay(), 0, 4);
         if (choice == 0) {
@@ -707,10 +732,10 @@ public class Pokemon {
         this.xp = xp;
     }
 
-    public void addXp(int xp, Scanner s) {
+    public void addXp(int xp) {
         this.xp += xp;
         System.out.println(this.display + " has gained " + xp + "XP! (" + this.xp + "/" + this.xpToNextLevel + ")");
-        this.checkIfLeveledUp(s);
+        this.checkIfLeveledUp();
     }
 
     public int getXpToNextLevel() {

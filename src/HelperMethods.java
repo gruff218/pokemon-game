@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class HelperMethods {
-    public static int getNumber(Scanner s, String question, int min, int max) {
-        while (true) {
+    public static int getNumber(String question, int min, int max) {
+        /*while (true) {
             System.out.print(question + " (" + min + "-" + max + ")? ");
 
 
@@ -18,7 +18,27 @@ public class HelperMethods {
                     return num;
                 }
             }
+        }*/
+        GameWindow.setLookingForKey(true);
+        System.out.println(question + " (" + min + "-" + max + ")? ");
+        int number = Integer.MAX_VALUE;
+        while (number < min || number > max) {
+            while (GameComponent.getCurrentKey() == null) {
+                //System.out.println(GameComponent.getCurrentKey());
+            }
+            try {
+                number = Character.getNumericValue(GameComponent.getCurrentKey());
+            } catch (NullPointerException e) {
+
+            }
+            if (number < min || number > max) {
+                System.out.println("Your number needs to be between " + min + " and " + max + ".");
+                System.out.println(question + " (" + min + "-" + max + ")? ");
+            }
         }
+        GameComponent.setCurrentKey(null);
+        GameWindow.setLookingForKey(false);
+        return number;
     }
 
     public static String turnIntoDisplay(String id) {

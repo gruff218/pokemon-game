@@ -20,10 +20,19 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5b312a17-cd2d-4c62-a100-326206e90702" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/GameComponent.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cache.db" beforeDir="false" afterPath="$PROJECT_DIR$/cache.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/HelperMethods.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/HelperMethods.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Move.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Move.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Pokemon.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Pokemon.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/PokemonGameMain.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Trainer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Trainer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HelperMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HelperMethods.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Move.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pokemon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pokemon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/PokemonGameMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/PokemonGameMain.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/PokemonGameMain.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameWindow.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Trainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Trainer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/User.java" afterDir="false" />
     </list>
@@ -54,6 +63,7 @@
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../pokeapi-v2-java" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
@@ -62,8 +72,8 @@
     <property name="settings.editor.selected.configurable" value="preferences.sourceCode.Java" />
   </component>
   <component name="RunManager">
-    <configuration name="PokemonGameMain" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="PokemonGameMain" />
+    <configuration name="GameWindow" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="GameWindow" />
       <module name="pokemon-game" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -71,7 +81,7 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.PokemonGameMain" />
+        <item itemvalue="Application.GameWindow" />
       </list>
     </recent_temporary>
   </component>
@@ -104,10 +114,10 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser" timestamp="1592259585051">
+    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser" timestamp="1592271210062">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1160@0.0.1920.1160" timestamp="1592259585051" />
+    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1160@0.0.1920.1160" timestamp="1592271210062" />
     <state x="790" y="273" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1592078056244">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -120,22 +130,22 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="666" y="321" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1592082270623" />
-    <state width="1877" height="321" key="GridCell.Tab.0.bottom" timestamp="1592262552743">
+    <state width="1877" height="321" key="GridCell.Tab.0.bottom" timestamp="1592284967897">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1592262552743" />
-    <state width="1877" height="321" key="GridCell.Tab.0.center" timestamp="1592262552742">
+    <state width="1877" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1592284967897" />
+    <state width="1877" height="321" key="GridCell.Tab.0.center" timestamp="1592284967897">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1592262552742" />
-    <state width="1877" height="321" key="GridCell.Tab.0.left" timestamp="1592262552742">
+    <state width="1877" height="321" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1592284967897" />
+    <state width="1877" height="321" key="GridCell.Tab.0.left" timestamp="1592284967897">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1592262552742" />
-    <state width="1877" height="321" key="GridCell.Tab.0.right" timestamp="1592262552742">
+    <state width="1877" height="321" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1592284967897" />
+    <state width="1877" height="321" key="GridCell.Tab.0.right" timestamp="1592284967897">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1592262552742" />
+    <state width="1877" height="321" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1592284967897" />
     <state width="1877" height="396" key="GridCell.Tab.1.bottom" timestamp="1592257658674">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -160,10 +170,10 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="529" y="309" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1160@0.0.1920.1160" timestamp="1592257555285" />
-    <state x="342" y="200" key="new project wizard" timestamp="1592253435318">
+    <state x="342" y="200" key="new project wizard" timestamp="1592268071283">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="342" y="200" key="new project wizard/0.0.1920.1160@0.0.1920.1160" timestamp="1592253435318" />
+    <state x="342" y="200" key="new project wizard/0.0.1920.1160@0.0.1920.1160" timestamp="1592268071283" />
     <state x="623" y="255" width="672" height="678" key="search.everywhere.popup" timestamp="1592257583453">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
