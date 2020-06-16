@@ -36,6 +36,7 @@ Trainer AI (Including smart switching)
 ALL Bag Items (Including: Health Restores, Battle Items, Pokeballs)
 Catching a pokemon
 Status Effects! (Burned, Poisoned, Paralyzed, Frozen, Asleep)
+Accuracy
 
 Included in the big idea but I have no clue how to do these:
 
