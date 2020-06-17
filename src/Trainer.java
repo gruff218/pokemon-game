@@ -47,6 +47,7 @@ public class Trainer extends GameComponent {
                 if (this.team[i].getHp() > 0) {
                     this.currentPok = this.team[i];
                     this.switched = true;
+                    this.currentPok.resetTempStats();
                     break;
                 }
             }
@@ -90,7 +91,7 @@ public class Trainer extends GameComponent {
         System.out.println(opponent.getDisplay() + " has fainted!");
         this.getCurrentPok().addXp(opponent.getBaseXp());
         if (opponent.getTrainer() != null) {
-            opponent.getTrainer().checkPokeHP();
+            opponent.getTrainer().checkPokes();
         }
     }
 

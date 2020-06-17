@@ -162,4 +162,20 @@ public class Move extends GameComponent {
     public void setStatChanges(HashMap<String, Integer> statChanges) {
         this.statChanges = statChanges;
     }
+
+    public int getAilmentChance() {
+        return ailmentChance;
+    }
+
+    public void setAilmentChance(int ailmentChance) {
+        this.ailmentChance = ailmentChance;
+    }
+
+    public String getAilment() {
+        return ailment;
+    }
+
+    public void setAilment(String ailment) {
+        this.ailment = ailment;
+    }
 }

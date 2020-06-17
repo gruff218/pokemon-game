@@ -70,6 +70,7 @@ public class User extends Trainer {
         } else {
             //System.out.println("Current Pok: " + this.getCurrentPok().getDisplay());
             System.out.println(opponent.getTrainer().getName() + " has sent out " + opponent.getDisplay() + "!");
+            System.out.println("Current Pok: " + opponent.getTrainer().getCurrentPok().getDisplay());
         }
         System.out.println(this.getCurrentPok().getDisplay() + " is battling " + opponent.getDisplay() + "!");
         boolean getSwitched = true;
@@ -102,6 +103,7 @@ public class User extends Trainer {
                 badPoke = false;
                 System.out.println("You sent out " + this.getCurrentPok().getDisplay() + "!");
                 this.setSwitched(true);
+                this.getCurrentPok().resetTempStats();
             }
         }
 

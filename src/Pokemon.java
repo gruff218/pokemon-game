@@ -45,6 +45,10 @@ public class Pokemon extends GameComponent {
     private String ailment;
     private int movesUntilNoAilment;
     private double burn;
+    private double paralysis;
+    private boolean isConfused;
+    private boolean isLeechSeeded;
+    private int movesUntilNotConfused;
 
     // A list of details showing types this Pokémon has.
     private ArrayList<PokemonType> types;
@@ -167,12 +171,17 @@ public class Pokemon extends GameComponent {
         this.moves = new Move[4];
         this.ailment = "none";
         this.burn = 1.0;
+        this.paralysis = 1.0;
+        this.isConfused = false;
+        this.movesUntilNotConfused = 0;
+        this.isLeechSeeded = false;
     }
 
     public void battle(User user, Pokemon opponent) {
         this.notSwitched = true;
         while (this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
-            System.out.println(this.getDisplay() + "'s HP: " + this.getHp() + "       " + opponent.getDisplay() + "'s HP: " + opponent.getHp());
+            System.out.println(this.getDisplay() + HelperMethods.ailmentToDisplay(this.ailment) + "'s HP: " + this.getHp() + "       " +
+                    opponent.getDisplay() + HelperMethods.ailmentToDisplay(opponent.getAilment()) + "'s HP: " + opponent.getHp());
             user.getChoice(this, opponent);
         }
         if (this.getHp() == 0) {
@@ -181,8 +190,7 @@ public class Pokemon extends GameComponent {
     }
 
 
-    public int getDamage(Pokemon opponent, int moveUsed) {
-        Move move = this.moves[moveUsed];
+    public int getDamage(Pokemon opponent, Move move) {
         if (move.getPower() == 0) {
             return 0;
         }
@@ -204,7 +212,7 @@ public class Pokemon extends GameComponent {
             System.out.println("It was not very effective...");
         }
         int actingLevel = this.level;
-        if (r.nextInt(256) < Math.floor(this.spdStat) * HelperMethods.stageToMultiplier(this.spdStage) / 2) {
+        if (r.nextInt(256) < Math.floor(this.spdStat * this.paralysis * HelperMethods.stageToMultiplier(this.spdStage) / 2)) {
             actingLevel = actingLevel * 2;
         }
         if (move.getType().equals(this.type1) || move.getType().equals(this.type2)) {
@@ -220,7 +228,7 @@ public class Pokemon extends GameComponent {
         if (this.trainer instanceof User) {
             choice = HelperMethods.getNumber("Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
                     "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4) - 1;
-            this.attackChosen(opponent, choice);
+            this.doStatusEffects(opponent, choice);
         } else {
             choice = r.nextInt(4);
             while (true) {
@@ -230,15 +238,18 @@ public class Pokemon extends GameComponent {
                     break;
                 }
             }
-            this.attackChosen(opponent, choice);
+            this.doStatusEffects(opponent, choice);
         }
     }
 
-    public void attackChosen(Pokemon opponent, int choice) {
-        if (this.ailment.equals("sleep")) {
+    public void doStatusEffects(Pokemon opponent, int choice) {
+        if (this.ailment.equals("none") || this.ailment.equals("unknown")) {
+            this.doAttack(opponent, choice);
+        } else if (this.ailment.equals("sleep")) {
             this.movesUntilNoAilment--;
             if (this.movesUntilNoAilment == 0) {
                 System.out.println(this.display + " has woken up!");
+                this.ailment = "none";
                 this.doAttack(opponent, choice);
             } else {
                 System.out.println(this.display + " is fast asleep...");
@@ -247,23 +258,115 @@ public class Pokemon extends GameComponent {
             this.doAttack(opponent, choice);
             System.out.println(this.display + " has taken damage from it's burn!");
             opponent.dealDamage((int)(this.hpStat/16), this);
+        } else if (this.ailment.equals("paralysis")) {
+            int paralyzed = r.nextInt(4);
+            if (paralyzed == 0) {
+                System.out.println(this.display + " is paralyzed and cannot move!");
+            } else {
+                this.doAttack(opponent, choice);
+            }
+        } else if (this.ailment.equals("freeze")) {
+            int thawedOut = r.nextInt(5);
+            if (thawedOut == 0) {
+                System.out.println(this.display + " has thawed out!");
+                this.ailment = "none";
+                this.doAttack(opponent, choice);
+            } else {
+                System.out.println(this.display + " is is frozen solid!");
+            }
+        } else if (this.ailment.equals("poison")) {
+            this.doAttack(opponent, choice);
+            System.out.println(this.display + " is poisoned!");
+            opponent.dealDamage((int)(this.hpStat/16), this);
         }
 
+        if (this.isLeechSeeded) {
+            this.doAttack(opponent, choice);
+            if (opponent.getHp() > 0 && this.getHp() > 0) {
+                System.out.println("The leech seed drains " + this.display + "'s health!");
+                opponent.dealDamage((int)(this.hpStat/16), this);
+                opponent.heal((int)(this.hpStat/16));
+            }
+        }
+        if (this.isConfused) {
+            this.movesUntilNotConfused--;
+            if (movesUntilNotConfused == 0) {
+                this.isConfused = false;
+                System.out.println(this.display + " has snapped out of it's confusion!");
+                this.doAttack(opponent, choice);
+            } else {
+                System.out.println(this.display + " is confused");
+                int hurtItself = r.nextInt(2);
+                if (hurtItself == 0) {
+                    System.out.println(this.display + " has hurt itself in it's confusion");
+                    this.dealDamage((int) Math.floor((((2 * this.level / 5 + 2) * 40 * this.atkStat / this.defStat) / 50 + 2) * 0.925), this);
+                } else {
+                    this.doAttack(opponent, choice);
+                }
+            }
+        }
+
+    }
+
+    public void heal() {
+        this.hp = this.hpStat;
+    }
+
+    public void heal(int health) {
+        this.hp += health;
+        if (this.hp > this.hpStat) {
+            this.heal();
+        }
     }
 
     public void doAttack(Pokemon opponent, int choice) {
-        System.out.println(this.display + " has used " + this.moves[choice].getDisplay() + "!");
-        if (this.getMoves()[choice].getDmgClass().equals("status")) {
-            this.affectStats(opponent, choice);
+        Move move = this.moves[choice];
+        System.out.println(this.display + " has used " + move.getDisplay() + "!");
+        int attackHit = r.nextInt(100);
+        if (attackHit < this.moves[choice].getAccuracy()) {
+            if (move.getDmgClass().equals("status")) {
+                this.affectStats(opponent, move);
+            } else {
+                this.dealDamage(opponent, move);
+            }
+            this.inflictAilment(opponent, move);
         } else {
-            this.dealDamage(opponent, choice);
+            System.out.println("The attack missed!");
         }
     }
 
-    public boolean affectStats(Pokemon opponent, int moveUsed) {
-        Move move = this.moves[moveUsed];
-        String changedStat = "";
-        int change = 0;
+    public void inflictAilment(Pokemon opponent, Move move) {
+        int ailmentInflicted = r.nextInt(100);
+        if (ailmentInflicted < move.getAilmentChance()) {
+            String ailment = move.getAilment();
+            if (ailment.equals("confusion")) {
+                opponent.setConfused(true);
+                System.out.println(opponent.getDisplay() + " was confused!");
+                opponent.setMovesUntilNotConfused(r.nextInt(4) + 2);
+            } else if (ailment.equals("leech-seed")) {
+                opponent.setLeechSeeded(true);
+                System.out.println("A leech seed was planted on " + opponent.getDisplay());
+            } else {
+                opponent.setAilment(ailment);
+                if (ailment.equals("sleep")) {
+                    opponent.setMovesUntilNoAilment(r.nextInt(4) + 2);
+                    System.out.println(opponent.getDisplay() + " fell asleep!");
+                } else if (ailment.equals("poison")) {
+                    System.out.println(opponent.getDisplay() + " was poisoned!");
+                } else if (ailment.equals("paralysis")) {
+                    System.out.println(opponent.getDisplay() + " was paralyzed!");
+                } else if (ailment.equals("freeze")) {
+                    System.out.println(opponent.getDisplay() + " was frozen solid!");
+                } else if (ailment.equals("burn")) {
+                    System.out.println(opponent.getDisplay() + " was burned!");
+                }
+
+            }
+        }
+    }
+
+
+    public boolean affectStats(Pokemon opponent, Move move) {
         for (Map.Entry<String, Integer> entry : move.getStatChanges().entrySet()) {
             String addition = this.changeStat(entry.getKey(), entry.getValue(), opponent);
             System.out.print(opponent.getDisplay() + "'s " + HelperMethods.turnIntoDisplay(entry.getKey()) + " stat was ");
@@ -283,22 +386,57 @@ public class Pokemon extends GameComponent {
             addition = " significantly";
         }
         if (stat.equals("attack")) {
-            target.atkStage += change;
+            target.setAtkStage(target.getAtkStage() + change);
+            if (target.getAtkStage() < -6) {
+                System.out.println(target.display + "'s attack stat couldn't go any lower!");
+                target.setAtkStage(6);
+            } else if (target.getAtkStage() > 6) {
+                System.out.println(target.display + "'s attack stat couldn't go any higher!");
+                target.setAtkStage((6));
+            }
         } else if (stat.equals("defense")) {
-            target.defStage += change;
+            target.setAtkStage(target.getAtkStage() + change);
+            if (target.getDefStage() < -6) {
+                System.out.println(target.display + "'s defense stat couldn't go any lower!");
+                target.setDefStage(6);
+            } else if (target.getDefStage() > 6) {
+                System.out.println(target.display + "'s defense stat couldn't go any higher!");
+                target.setDefStage((6));
+            }
         } else if (stat.equals("special-attack")) {
-            target.spAtkStage += change;
+            target.setAtkStage(target.getAtkStage() + change);
+            if (target.getSpAtkStage() < -6) {
+                System.out.println(target.display + "'s special attack stat couldn't go any lower!");
+                target.setSpAtkStage(6);
+            } else if (target.getSpAtkStage() > 6) {
+                System.out.println(target.display + "'s special attack stat couldn't go any higher!");
+                target.setSpAtkStage((6));
+            }
         } else if (stat.equals("special-defense")) {
-            target.spDefStage += change;
+            target.setAtkStage(target.getAtkStage() + change);
+            if (target.getSpDefStage() < -6) {
+                System.out.println(target.display + "'s special defense stat couldn't go any lower!");
+                target.setSpDefStage(6);
+            } else if (target.getSpDefStage() > 6) {
+                System.out.println(target.display + "'s special defense stat couldn't go any higher!");
+                target.setSpDefStage((6));
+            }
         } else if (stat.equals("speed")) {
-            target.spdStage += change;
+            target.setAtkStage(target.getAtkStage() + change);
+            if (target.getSpdStage() < -6) {
+                System.out.println(target.display + "'s speed stat couldn't go any lower!");
+                target.setSpdStage(6);
+            } else if (target.getSpdStage() > 6) {
+                System.out.println(target.display + "'s speed stat couldn't go any higher!");
+                target.setSpdStage((6));
+            }
         }
         //target.printStages();
         return addition;
     }
 
-    public void dealDamage(Pokemon opponent, int choice) {
-        int damage = this.getDamage(opponent, choice);
+    public void dealDamage(Pokemon opponent, Move move) {
+        int damage = this.getDamage(opponent, move);
         System.out.println("Damage dealt: " + damage);
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
@@ -399,6 +537,9 @@ public class Pokemon extends GameComponent {
         this.spAtkStage = 0;
         this.spDefStage = 0;
         this.spdStage = 0;
+        this.isConfused = false;
+        this.isLeechSeeded = false;
+        this.movesUntilNotConfused = 0;
     }
 
     public void printStats() {
@@ -744,5 +885,61 @@ public class Pokemon extends GameComponent {
 
     public void setXpToNextLevel(int xpToNextLevel) {
         this.xpToNextLevel = xpToNextLevel;
+    }
+
+    public String getAilment() {
+        return ailment;
+    }
+
+    public void setAilment(String ailment) {
+        this.ailment = ailment;
+    }
+
+    public int getMovesUntilNoAilment() {
+        return movesUntilNoAilment;
+    }
+
+    public void setMovesUntilNoAilment(int movesUntilNoAilment) {
+        this.movesUntilNoAilment = movesUntilNoAilment;
+    }
+
+    public double getBurn() {
+        return burn;
+    }
+
+    public void setBurn(double burn) {
+        this.burn = burn;
+    }
+
+    public double getParalysis() {
+        return paralysis;
+    }
+
+    public void setParalysis(double paralysis) {
+        this.paralysis = paralysis;
+    }
+
+    public boolean isConfused() {
+        return isConfused;
+    }
+
+    public void setConfused(boolean confused) {
+        isConfused = confused;
+    }
+
+    public boolean isLeechSeeded() {
+        return isLeechSeeded;
+    }
+
+    public void setLeechSeeded(boolean leechSeeded) {
+        isLeechSeeded = leechSeeded;
+    }
+
+    public int getMovesUntilNotConfused() {
+        return movesUntilNotConfused;
+    }
+
+    public void setMovesUntilNotConfused(int movesUntilNotConfused) {
+        this.movesUntilNotConfused = movesUntilNotConfused;
     }
 }

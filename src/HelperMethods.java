@@ -169,4 +169,22 @@ public class HelperMethods {
         }
     }
 
+    public static String ailmentToDisplay(String ailment) {
+        if (ailment.equals("none") || ailment.equals("unknown")) {
+            return "";
+        } else if (ailment.equals("sleep")) {
+            return "(SLP)";
+        } else if (ailment.equals("poison")) {
+            return "(POIS)";
+        } else if (ailment.equals("burn")) {
+            return "(BRN)";
+        } else if (ailment.equals("paralysis")) {
+            return "(PAR)";
+        } else if (ailment.equals("freeze")) {
+            return "(FRZ)";
+        } else {
+            return "something went wrong with ailment id's";
+        }
+    }
+
 }
