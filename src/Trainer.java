@@ -106,7 +106,7 @@ public class Trainer extends GameComponent {
             display += "Slot " + (i + 1) + ": ";
 
             if (this.team[i] != null) {
-                display += this.team[i].getDisplay() + " HP: " + this.team[i].getHp() + "/" + this.team[i].getHpStat();
+                display += this.team[i].getDisplay() + " HP: " + this.team[i].getHp() + "/" + (double)this.team[i].getHpStat();
             } else {
                 display += "Empty";
             }

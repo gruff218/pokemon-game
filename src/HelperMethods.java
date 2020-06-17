@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 public class HelperMethods {
@@ -185,6 +187,14 @@ public class HelperMethods {
         } else {
             return "something went wrong with ailment id's";
         }
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) System.out.println("You can't round something to negative places");;
+
+        BigDecimal bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
 }

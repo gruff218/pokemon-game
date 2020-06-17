@@ -180,8 +180,8 @@ public class Pokemon extends GameComponent {
     public void battle(User user, Pokemon opponent) {
         this.notSwitched = true;
         while (this.getHp() > 0 && opponent.getHp() > 0 && notSwitched) {
-            System.out.println(this.getDisplay() + HelperMethods.ailmentToDisplay(this.ailment) + "'s HP: " + this.getHp() + "       " +
-                    opponent.getDisplay() + HelperMethods.ailmentToDisplay(opponent.getAilment()) + "'s HP: " + opponent.getHp());
+            System.out.println(this.getDisplay() + HelperMethods.ailmentToDisplay(this.ailment) + "'s HP: " + HelperMethods.round(this.getHp(), 1) + "       " +
+                    opponent.getDisplay() + HelperMethods.ailmentToDisplay(opponent.getAilment()) + "'s HP: " + HelperMethods.round(opponent.getHp(), 1));
             user.getChoice(opponent);
         }
         if (this.getHp() == 0) {
@@ -255,7 +255,7 @@ public class Pokemon extends GameComponent {
         } else if (this.ailment.equals("burn")) {
             this.doAttack(opponent, choice);
             System.out.println(this.display + " has taken damage from it's burn!");
-            opponent.dealDamage(this.hpStat/16, this);
+            opponent.dealDamage((double)this.hpStat/16, this);
         } else if (this.ailment.equals("paralysis")) {
             int paralyzed = r.nextInt(4);
             if (paralyzed == 0) {
@@ -275,15 +275,15 @@ public class Pokemon extends GameComponent {
         } else if (this.ailment.equals("poison")) {
             this.doAttack(opponent, choice);
             System.out.println(this.display + " is poisoned!");
-            opponent.dealDamage(this.hpStat/16, this);
+            opponent.dealDamage((double)this.hpStat/16, this);
         }
 
         if (this.isLeechSeeded) {
             this.doAttack(opponent, choice);
             if (opponent.getHp() > 0 && this.getHp() > 0) {
                 System.out.println("The leech seed drains " + this.display + "'s health!");
-                opponent.dealDamage(this.hpStat/16, this);
-                opponent.heal(this.hpStat/16);
+                opponent.dealDamage((double)this.hpStat/16, this);
+                opponent.heal((double)this.hpStat/16);
             }
         }
         if (this.isConfused) {
@@ -297,7 +297,7 @@ public class Pokemon extends GameComponent {
                 int hurtItself = r.nextInt(2);
                 if (hurtItself == 0) {
                     System.out.println(this.display + " has hurt itself in it's confusion");
-                    this.dealDamage((((2 * this.level / 5 + 2) * 40 * this.atkStat / this.defStat) / 50 + 2) * 0.925, this);
+                    this.dealDamage((((2 * (double)this.level / 5 + 2) * 40 * (double)this.atkStat / (double)this.defStat) / 50 + 2) * 0.925, this);
                 } else {
                     this.doAttack(opponent, choice);
                 }
@@ -317,17 +317,17 @@ public class Pokemon extends GameComponent {
             }
         } else if (this.ailment.equals("burn")) {
             System.out.println(this.display + " has taken damage from it's burn!");
-            opponent.dealDamage((int)(this.hpStat/16), this);
+            opponent.dealDamage((double)this.hpStat/16, this);
         } else if (this.ailment.equals("poison")) {
             System.out.println(this.display + " is poisoned!");
-            opponent.dealDamage((int)(this.hpStat/16), this);
+            opponent.dealDamage((double)this.hpStat/16, this);
         }
 
         if (this.isLeechSeeded) {
             if (opponent.getHp() > 0 && this.getHp() > 0) {
                 System.out.println("The leech seed drains " + this.display + "'s health!");
-                opponent.dealDamage((int)(this.hpStat/16), this);
-                opponent.heal((int)(this.hpStat/16));
+                opponent.dealDamage((double)this.hpStat/16, this);
+                opponent.heal((double)this.hpStat/16);
             }
         }
         if (this.isConfused) {
@@ -363,7 +363,6 @@ public class Pokemon extends GameComponent {
             } else {
                 this.dealDamage(opponent, move);
             }
-            System.out.println("Was here");
             this.inflictAilment(opponent, move);
         } else {
             System.out.println("The attack missed!");
@@ -371,7 +370,19 @@ public class Pokemon extends GameComponent {
     }
 
     public void inflictAilment(Pokemon opponent, Move move) {
-        if (!move.getAilment().equals("none") && !move.getAilment().equals("unknown") && move.getAilmentChance() == 0) {
+        if (move.getAilment().equals("none") || move.getAilment().equals("unknown")) {
+            return;
+        }
+        if (!opponent.ailment.equals("none") && !move.getAilment().equals("leech-seed") && !move.getAilment().equals("confusion") ||
+                (move.getAilment().equals("leech-seed") && opponent.isLeechSeeded) ||
+                (move.getAilment().equals("confusion") && opponent.isConfused)) {
+            if (move.getAilmentChance() == 0) {
+                System.out.println("But it failed!");
+            }
+            return;
+        }
+        if (move.getAilmentChance() == 0) {
+
             String ailment = move.getAilment();
             if (ailment.equals("confusion")) {
                 opponent.setConfused(true);
@@ -498,7 +509,7 @@ public class Pokemon extends GameComponent {
 
     public void dealDamage(Pokemon opponent, Move move) {
         double damage = this.getDamage(opponent, move);
-        System.out.println("Damage dealt: " + damage);
+        System.out.println("Damage dealt: " + HelperMethods.round(damage, 1));
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
@@ -507,7 +518,7 @@ public class Pokemon extends GameComponent {
     }
 
     public void dealDamage(double damage, Pokemon opponent) {
-        System.out.println("Damage dealt: " + damage);
+        System.out.println("Damage dealt: " + HelperMethods.round(damage, 1));
         opponent.setHp(opponent.getHp() - damage);
         if (opponent.getHp() < 0) {
             opponent.setHp(0);
