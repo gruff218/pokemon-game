@@ -53,10 +53,11 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
         Scanner s = new Scanner(System.in);
         Pokemon pok1 = new Pokemon("squirtle", 10);
         Pokemon pok2 = new Pokemon("charmander", 10);
-        Pokemon pok3 = new Pokemon("pikachu", 10, new Move[]{new Move("thunder-wave"),
-                new Move("thunderbolt"),
-                new Move("tackle"),
-                new Move("tackle")});
+        Pokemon pok3 = new Pokemon("pikachu", 100, new Move[]{new Move("thunder-wave"),
+                new Move("will-o-wisp"),
+                new Move("hypnosis"),
+                new Move("powder-snow")});
+        System.out.println(pok3.getMoves()[0]);
         Pokemon pok4 = new Pokemon("ponyta", 10);
         //System.out.println(Arrays.toString(pok2.getMoves()));
         //System.out.println(Arrays.toString(pok1.getStats()));

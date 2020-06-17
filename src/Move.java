@@ -128,10 +128,12 @@ public class Move extends GameComponent {
                 ", id='" + id + '\'' +
                 ", power=" + power +
                 ", accuracy=" + accuracy +
-                ", type=" + type +
+                ", type='" + type + '\'' +
                 ", pp=" + pp +
                 ", isMove=" + isMove +
                 ", dmgClass='" + dmgClass + '\'' +
+                ", ailmentChance=" + ailmentChance +
+                ", ailment='" + ailment + '\'' +
                 '}';
     }
 

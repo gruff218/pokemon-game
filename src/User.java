@@ -15,15 +15,15 @@ public class User extends Trainer {
     }
 
 
-    public void getChoice(Pokemon currentPok, Pokemon opponent) {
+    public void getChoice(Pokemon opponent) {
         int choice = HelperMethods.getNumber("Would you like to:\n1) Attack\n2) Switch\n3) Bag\n4) Run\nEnter a number from:", 1, 4);
         if (choice == 1) {
-            currentPok.attack(opponent);
+            this.getCurrentPok().attack(opponent);
 
         } else if (choice == 2) {
             this.switchPokemon();
         } else if (choice == 3) {
-
+            this.getCurrentPok().doStatusEffects(opponent);
         } else if (choice == 4) {
 
         } else {

@@ -23,16 +23,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cache.db" beforeDir="false" afterPath="$PROJECT_DIR$/cache.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/GameWindow.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/GameWindow.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/HelperMethods.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/HelperMethods.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Move.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Move.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Pokemon.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Pokemon.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/Trainer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/Trainer.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/pokemon-game/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/pokemon-game/User.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GameWindow.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GameWindow.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/HelperMethods.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HelperMethods.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Move.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pokemon.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pokemon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Trainer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Trainer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/User.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -113,10 +109,10 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser" timestamp="1592346864962">
+    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser" timestamp="1592362760566">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1160@0.0.1920.1160" timestamp="1592346864962" />
+    <state x="765" y="264" key="#com.intellij.ide.util.MemberChooser/0.0.1920.1160@0.0.1920.1160" timestamp="1592362760566" />
     <state x="790" y="273" key="#com.intellij.openapi.roots.ui.configuration.libraryEditor.LibraryEditorDialog" timestamp="1592078056244">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
@@ -129,22 +125,22 @@
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
     <state x="666" y="321" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1592082270623" />
-    <state width="1877" height="321" key="GridCell.Tab.0.bottom" timestamp="1592355047591">
+    <state width="1877" height="321" key="GridCell.Tab.0.bottom" timestamp="1592363773266">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1592355047591" />
-    <state width="1877" height="321" key="GridCell.Tab.0.center" timestamp="1592355047591">
+    <state width="1877" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1592363773266" />
+    <state width="1877" height="321" key="GridCell.Tab.0.center" timestamp="1592363773266">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1592355047591" />
-    <state width="1877" height="321" key="GridCell.Tab.0.left" timestamp="1592355047590">
+    <state width="1877" height="321" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1592363773266" />
+    <state width="1877" height="321" key="GridCell.Tab.0.left" timestamp="1592363773266">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1592355047590" />
-    <state width="1877" height="321" key="GridCell.Tab.0.right" timestamp="1592355047591">
+    <state width="1877" height="321" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1592363773266" />
+    <state width="1877" height="321" key="GridCell.Tab.0.right" timestamp="1592363773266">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
-    <state width="1877" height="321" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1592355047591" />
+    <state width="1877" height="321" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1592363773266" />
     <state width="1877" height="396" key="GridCell.Tab.1.bottom" timestamp="1592257658674">
       <screen x="0" y="0" width="1920" height="1160" />
     </state>
