@@ -35,6 +35,7 @@ Wild Pokemon AI (Something other than random)
 Trainer AI (Including smart switching)
 ALL Bag Items (Including: Health Restores, Battle Items, Pokeballs)
 Catching a pokemon
+PC
 
 Included in the big idea but I have no clue how to do these:
 

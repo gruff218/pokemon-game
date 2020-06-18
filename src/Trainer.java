@@ -118,6 +118,17 @@ public class Trainer extends GameComponent {
         return display;
     }
 
+    public boolean addPoke(Pokemon pkmn) {
+        for (int i = 0; i < 6; i++) {
+            if (this.getTeam()[i] == null) {
+                this.getTeam()[i] = pkmn;
+                return true;
+            }
+        }
+        System.out.println("Your party is full!");
+        return false;
+    }
+
     public Pokemon[] getTeam() {
         return team;
     }

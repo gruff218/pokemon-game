@@ -23,6 +23,8 @@ public class Move extends GameComponent {
     private HashMap<String, Integer> statChanges;
     private int ailmentChance;
     private String ailment;
+    private String target;
+    private int percentHeal;
 
     public Move() {
         this.display = "";
@@ -65,6 +67,8 @@ public class Move extends GameComponent {
         }
         this.ailmentChance = temp.getMeta().getAilmentChance();
         this.ailment = temp.getMeta().getAilment().getName();
+        this.target = temp.getTarget().getName();
+        this.percentHeal = temp.getMeta().getHealing();
     }
 
 
@@ -179,5 +183,21 @@ public class Move extends GameComponent {
 
     public void setAilment(String ailment) {
         this.ailment = ailment;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public int getPercentHeal() {
+        return percentHeal;
+    }
+
+    public void setPercentHeal(int percentHeal) {
+        this.percentHeal = percentHeal;
     }
 }

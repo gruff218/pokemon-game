@@ -25,6 +25,7 @@ public class HelperMethods {
         System.out.println(question + " (" + min + "-" + max + ")? ");
         int number = Integer.MAX_VALUE;
         while (number < min || number > max) {
+            number = Integer.MAX_VALUE;
             while (GameComponent.getCurrentKey() == null) {
                 //System.out.println(GameComponent.getCurrentKey());
             }
@@ -36,6 +37,7 @@ public class HelperMethods {
             if (number < min || number > max) {
                 System.out.println("Your number needs to be between " + min + " and " + max + ".");
                 System.out.println(question + " (" + min + "-" + max + ")? ");
+                GameComponent.setCurrentKey(null);
             }
         }
         GameComponent.setCurrentKey(null);
@@ -195,6 +197,31 @@ public class HelperMethods {
         BigDecimal bd = new BigDecimal(Double.toString(value));
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
+    }
+
+    public static double ailmentToCatchRate(String ailment) {
+        if (ailment.equals("sleep") || ailment.equals("freeze")) {
+            return 2.0;
+        } else if (ailment.equals("paralysis") || ailment.equals("poison") || ailment.equals("burn")) {
+            return 1.5;
+        } else {
+            return 1.0;
+        }
+    }
+
+    public static String shakeNumToDisplay(Pokemon opponent, int num) {
+        if (num == 1) {
+            return "It shook once!";
+        } else if (num == 2) {
+            return "It shook twice!";
+        } else if (num == 3) {
+            return "It shook three times!";
+        } else if (num == 4) {
+            return opponent.getDisplay() + " was caught!";
+        } else {
+            System.out.println("Something went wrong... (shakeNumToDisplay())");
+            return "";
+        }
     }
 
 }

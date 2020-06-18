@@ -49,11 +49,12 @@ public class Pokemon extends GameComponent {
     private boolean isConfused;
     private boolean isLeechSeeded;
     private int movesUntilNotConfused;
+    private int catchRate;
 
     // A list of details showing types this Pokémon has.
     private ArrayList<PokemonType> types;
 
-    private static Random r = new Random();
+    public static Random r = new Random();
 
 
     enum Type {
@@ -175,6 +176,7 @@ public class Pokemon extends GameComponent {
         this.isConfused = false;
         this.movesUntilNotConfused = 0;
         this.isLeechSeeded = false;
+        this.catchRate = 125;
     }
 
     public void battle(User user, Pokemon opponent) {
@@ -342,6 +344,10 @@ public class Pokemon extends GameComponent {
 
     }
 
+    public void heal(Pokemon target, Move move) {
+        target.heal(target.getHpStat() * (double)move.getPercentHeal()/100);
+    }
+
     public void heal() {
         this.hp = this.hpStat;
     }
@@ -356,14 +362,18 @@ public class Pokemon extends GameComponent {
     public void doAttack(Pokemon opponent, int choice) {
         Move move = this.moves[choice];
         System.out.println(this.display + " has used " + move.getDisplay() + "!");
+        Pokemon target;
         int attackHit = r.nextInt(100);
         if (attackHit < this.moves[choice].getAccuracy()) {
-            if (move.getDmgClass().equals("status")) {
-                this.affectStats(opponent, move);
+            if (move.getTarget().equals("user")) {
+                target = this;
             } else {
-                this.dealDamage(opponent, move);
+                target = opponent;
             }
-            this.inflictAilment(opponent, move);
+            this.dealDamage(target, move);
+            this.affectStats(target, move);
+            this.inflictAilment(target, move);
+            this.heal(target, move);
         } else {
             System.out.println("The attack missed!");
         }
@@ -1013,5 +1023,13 @@ public class Pokemon extends GameComponent {
 
     public void setMovesUntilNotConfused(int movesUntilNotConfused) {
         this.movesUntilNotConfused = movesUntilNotConfused;
+    }
+
+    public int getCatchRate() {
+        return catchRate;
+    }
+
+    public void setCatchRate(int catchRate) {
+        this.catchRate = catchRate;
     }
 }
