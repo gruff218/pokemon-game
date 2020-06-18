@@ -9,7 +9,7 @@ import java.io.*;
 import java.net.*;
 import java.util.HashMap;
 
-public class Move extends GameComponent {
+public class Move {
 
 
     private String display;

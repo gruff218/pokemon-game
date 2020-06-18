@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Trainer extends GameComponent {
+public class Trainer {
     private Pokemon[] team;
     private Pokemon currentPok;
     private String name;

@@ -14,8 +14,9 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
     private User user;
     JTextArea displayArea;
     private static boolean lookingForKey;
+    private static ArrayList<Character> keyRequests = new ArrayList<>();
 
-    public GameWindow (String name, User user) {
+    public GameWindow(String name, User user) {
         this.name = name;
         this.user = user;
     }
@@ -28,7 +29,7 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
     private Command secondCharacterCommand;*/
 
     public static void main(String[] args) {
-        Pokemon pok1 = new Pokemon("squirtle", 10);
+        Pokemon pok1 = new Pokemon("squirtle", 12);
         Pokemon pok2 = new Pokemon("charmander", 10);
         Pokemon pok3 = new Pokemon("pikachu", 100, new Move[]{new Move("thunder-wave"),
                 new Move("will-o-wisp"),
@@ -105,35 +106,44 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
         int id = e.getID();
         if (id == KeyEvent.KEY_TYPED) {
             char c = e.getKeyChar();
-            if (lookingForKey) {
-                if (c == '1') {
-                    GameComponent.setCurrentKey('1');
-                } else if (c == '2') {
-                    GameComponent.setCurrentKey('2');
-                } else if (c == '3') {
-                    GameComponent.setCurrentKey('3');
-                } else if (c == '4') {
-                    GameComponent.setCurrentKey('4');
-                } else if (c == '5') {
-                    GameComponent.setCurrentKey('5');
-                } else if (c == '6') {
-                    GameComponent.setCurrentKey('6');
-                }
+            if (c == '1') {
+                keyRequests.set(keyRequests.size() - 1, '1');
+                System.out.println(keyRequests);
+            } else if (c == '2') {
+                keyRequests.set(keyRequests.size() - 1, '2');
+            } else if (c == '3') {
+                keyRequests.set(keyRequests.size() - 1, '3');
+            } else if (c == '4') {
+                keyRequests.set(keyRequests.size() - 1, '4');
+            } else if (c == '5') {
+                keyRequests.set(keyRequests.size() - 1, '5');
+            } else if (c == '6') {
+                keyRequests.set(keyRequests.size() - 1, '6');
             }
+
             if (c == 'L') {
                 this.user.getCurrentPok().addXp(this.user.getCurrentPok().getXpToNextLevel());
             }
         }
     }
 
-    /** Handle the key pressed event from the text field. */
-    public void keyPressed(KeyEvent e) {}
+    /**
+     * Handle the key pressed event from the text field.
+     */
+    public void keyPressed(KeyEvent e) {
+    }
 
-    /** Handle the key released event from the text field. */
-    public void keyReleased(KeyEvent e) {}
+    /**
+     * Handle the key released event from the text field.
+     */
+    public void keyReleased(KeyEvent e) {
+    }
 
-    /** Handle the button click. */
-    public void actionPerformed(ActionEvent e) {}
+    /**
+     * Handle the button click.
+     */
+    public void actionPerformed(ActionEvent e) {
+    }
 
     @Override
     public String getName() {
@@ -159,5 +169,13 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
 
     public static void setLookingForKey(boolean lookingForKey) {
         GameWindow.lookingForKey = lookingForKey;
+    }
+
+    public synchronized static ArrayList<Character> getKeyRequests() {
+        return keyRequests;
+    }
+
+    public synchronized static void setKeyRequests(ArrayList<Character> keyRequests) {
+        GameWindow.keyRequests = keyRequests;
     }
 }

@@ -21,7 +21,7 @@ public class HelperMethods {
                 }
             }
         }*/
-        GameWindow.setLookingForKey(true);
+        /*GameWindow.setLookingForKey(true);
         System.out.println(question + " (" + min + "-" + max + ")? ");
         int number = Integer.MAX_VALUE;
         while (number < min || number > max) {
@@ -42,6 +42,28 @@ public class HelperMethods {
         }
         GameComponent.setCurrentKey(null);
         GameWindow.setLookingForKey(false);
+        return number;*/
+        System.out.println(question + " (" + min + "-" + max + ")?");
+        int number = Integer.MAX_VALUE;
+        GameWindow.getKeyRequests().add('À');
+        int id = GameWindow.getKeyRequests().size() - 1;
+        while (number < min || number > max) {
+            number = Integer.MAX_VALUE;
+            while (GameWindow.getKeyRequests().get(id) == 'À') {
+                //System.out.println(GameComponent.getCurrentKey());
+            }
+            try {
+                number = Character.getNumericValue(GameWindow.getKeyRequests().get(id));
+            } catch (NullPointerException e) {
+
+            }
+            if (number < min || number > max) {
+                System.out.println("Your number needs to be between " + min + " and " + max + ".");
+                System.out.println(question + " (" + min + "-" + max + ")? ");
+                GameWindow.getKeyRequests().set(id, 'À');
+            }
+        }
+        GameWindow.getKeyRequests().remove(id);
         return number;
     }
 

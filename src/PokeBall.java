@@ -1,11 +1,11 @@
-public class PokeBall extends CatchingBall{
+public class PokeBall extends CatchingBall {
 
     public PokeBall() {
-        this.setBaseCatchRate(1);
+        this.setBaseCatchRate(1.0);
         this.setDisplay("Poke Ball");
         this.setId("poke-ball");
     }
-    public int getCatchMultiplier(Pokemon opponent) {
+    public double getCatchMultiplier(Pokemon opponent) {
         return this.getBaseCatchRate();
     }
 }

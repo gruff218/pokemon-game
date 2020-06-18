@@ -1,15 +1,15 @@
-public abstract class CatchingBall extends GameComponent{
-    private int baseCatchRate;
+public abstract class CatchingBall {
+    private double baseCatchRate;
     private String display;
     private String id;
 
-    public abstract int getCatchMultiplier(Pokemon opponent);
+    public abstract double getCatchMultiplier(Pokemon opponent);
 
-    public int getBaseCatchRate() {
+    public double getBaseCatchRate() {
         return baseCatchRate;
     }
 
-    public void setBaseCatchRate(int baseCatchRate) {
+    public void setBaseCatchRate(double baseCatchRate) {
         this.baseCatchRate = baseCatchRate;
     }
 

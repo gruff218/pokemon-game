@@ -2,7 +2,7 @@ import pokeapi.bittle.models.pokemon.*;
 
 import java.util.*;
 
-public class Pokemon extends GameComponent {
+public class Pokemon {
 
     private String display;
     private String id;
@@ -560,6 +560,7 @@ public class Pokemon extends GameComponent {
     }
 
     public void printStatChanges(int atk, int def, int spAtk, int spDef, int spd, int hp) {
+        System.out.println(this.display + " is now level " + this.level + "!");
         System.out.println("HP: " + this.hpStat + " --> " + hp);
         System.out.println("Attack: " + this.atkStat + " --> " + atk);
         System.out.println("Defense: " + this.defStat + " --> " + def);
@@ -597,10 +598,12 @@ public class Pokemon extends GameComponent {
         for (int i = 0; i < 4; i++) {
             if (!moves[i].isMove()) {
                 moves[i] = move;
+                System.out.println(this.display  + " has learned " + move.getDisplay() + "!");
                 return true;
             }
         }
-        int choice = HelperMethods.getNumber(this.display + " already knows four moves. Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
+        int choice = HelperMethods.getNumber(this.display + " is trying to learn "  + move.getDisplay() + "! But " + this.display + " already knows four moves.\n" +
+                 "Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
                 ".\n1) " + moves[0].getDisplay() + "    2) " + moves[1].getDisplay() +
                 "\n3) " + moves[2].getDisplay() + "    4) " + moves[3].getDisplay(), 0, 4);
         if (choice == 0) {
