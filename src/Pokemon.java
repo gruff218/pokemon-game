@@ -227,7 +227,7 @@ public class Pokemon {
         int choice = -1;
         if (this.trainer instanceof User) {
             choice = HelperMethods.getNumber("Moves:\n1) " + this.moves[0].getDisplay() + "   2) " + this.moves[1].getDisplay() +
-                    "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4) - 1;
+                    "\n3) " + this.moves[2].getDisplay() + "    4) " + this.moves[3].getDisplay() + "\nEnter a number from:", 1, 4, (User)this.trainer) - 1;
             this.doStatusEffects(opponent, choice);
         } else {
             choice = r.nextInt(4);
@@ -569,32 +569,32 @@ public class Pokemon {
         System.out.println("Speed: " + this.spdStat + " --> " + spd);
     }
 
-    public boolean checkIfLeveledUp() {
+    public boolean checkIfLeveledUp(boolean cheat) {
         if (this.xp >= this.xpToNextLevel) {
             this.xp -= this.xpToNextLevel;
             this.level++;
             this.initVariables(false);
-            this.checkIfLearnedMove();
+            this.checkIfLearnedMove(cheat);
             return true;
         } else {
             return false;
         }
     }
 
-    public void checkIfLearnedMove() {
+    public void checkIfLearnedMove(boolean cheat) {
         for (Map.Entry<Move, Integer> entry : this.possibleMoves.entrySet()) {
             if (this.level == entry.getValue()) {
-                this.learn(entry.getKey());
+                this.learn(entry.getKey(), cheat);
             }
         }
     }
 
     public boolean learn(String moveName) {
         Move move = new Move(moveName);
-        return this.learn(move);
+        return this.learn(move, false);
     }
 
-    public boolean learn(Move move) {
+    public boolean learn(Move move, boolean cheat) {
         for (int i = 0; i < 4; i++) {
             if (!moves[i].isMove()) {
                 moves[i] = move;
@@ -602,10 +602,18 @@ public class Pokemon {
                 return true;
             }
         }
-        int choice = HelperMethods.getNumber(this.display + " is trying to learn "  + move.getDisplay() + "! But " + this.display + " already knows four moves.\n" +
-                 "Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
-                ".\n1) " + moves[0].getDisplay() + "    2) " + moves[1].getDisplay() +
-                "\n3) " + moves[2].getDisplay() + "    4) " + moves[3].getDisplay(), 0, 4);
+        int choice = -1;
+        if (cheat) {
+            choice = HelperMethods.getCheatNumber(this.display + " is trying to learn " + move.getDisplay() + "! But " + this.display + " already knows four moves.\n" +
+                    "Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
+                    ".\n1) " + moves[0].getDisplay() + "    2) " + moves[1].getDisplay() +
+                    "\n3) " + moves[2].getDisplay() + "    4) " + moves[3].getDisplay(), 0, 4, (User)this.trainer);
+        } else {
+            choice = HelperMethods.getNumber(this.display + " is trying to learn " + move.getDisplay() + "! But " + this.display + " already knows four moves.\n" +
+                    "Which move would you like to replace? Enter 0 to stop learning " + move.getDisplay() +
+                    ".\n1) " + moves[0].getDisplay() + "    2) " + moves[1].getDisplay() +
+                    "\n3) " + moves[2].getDisplay() + "    4) " + moves[3].getDisplay(), 0, 4, (User)this.trainer);
+        }
         if (choice == 0) {
             System.out.println(this.display + " has stopped learning " + move.getDisplay() + "!");
             return false;
@@ -958,10 +966,10 @@ public class Pokemon {
         this.xp = xp;
     }
 
-    public void addXp(int xp) {
+    public void addXp(int xp, boolean cheat) {
         this.xp += xp;
         System.out.println(this.display + " has gained " + xp + "XP! (" + this.xp + "/" + this.xpToNextLevel + ")");
-        this.checkIfLeveledUp();
+        this.checkIfLeveledUp(cheat);
     }
 
     public int getXpToNextLevel() {

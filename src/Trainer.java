@@ -89,7 +89,7 @@ public class Trainer {
 
     public void battleWon(Pokemon opponent) {
         System.out.println(opponent.getDisplay() + " has fainted!");
-        this.getCurrentPok().addXp(opponent.getBaseXp());
+        this.getCurrentPok().addXp(opponent.getBaseXp(), false);
         if (opponent.getTrainer() != null) {
             opponent.getTrainer().checkPokes();
         }

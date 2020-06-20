@@ -4,17 +4,20 @@ import java.util.Map;
 public class User extends Trainer {
 
     private HashMap<CatchingBall, Integer> pokeballs;
+    private HashMap<Potion, Integer> potions;
     private boolean opponentCaught;
 
     public User(String name) {
         super();
         this.setName(name);
         this.pokeballs = new HashMap<>();
+        this.potions = new HashMap<>();
     }
 
     public User(Pokemon[] team, String name) {
         super(team, name);
         this.pokeballs = new HashMap<>();
+        this.potions = new HashMap<>();
     }
 
     public void move() {
@@ -23,31 +26,36 @@ public class User extends Trainer {
 
 
     public void getChoice(Pokemon opponent) {
-        int choice = HelperMethods.getNumber("Would you like to:\n1) Attack\n2) Switch\n3) Bag\n4) Run\nEnter a number from:", 1, 4);
+        int choice = HelperMethods.getNumber("Would you like to:\n1) Attack\n2) Switch\n3) Bag\n4) Run\nEnter a number from:", 1, 4, this);
         if (choice == 1) {
             this.getCurrentPok().attack(opponent);
 
         } else if (choice == 2) {
             this.switchPokemon();
         } else if (choice == 3) {
-            if (opponent.getTrainer() == null) {
-                int ballChoice = HelperMethods.getNumber("Which Poke Ball which you like to use?\n" + this.getBallDisplay() + "Enter a number from:", 1, this.pokeballs.size());
-                int i = 0;
-                boolean caught = false;
-                for (Map.Entry<CatchingBall, Integer> entry : this.pokeballs.entrySet()) {
-                    i++;
-                    if (i == ballChoice) {
-                        caught = this.attemptCatch(opponent, entry.getKey());
-                    }
-                }
-                if (!caught) {
-                    this.getCurrentPok().doStatusEffects(opponent);
-                } else {
-                    this.getCurrentPok().addXp(opponent.getBaseXp());
-                }
+            int bagChoice = HelperMethods.getNumber("Would you like to open your health restores, or pokeballs?\nEnter a number from:", 1, 2, this);
+            if (bagChoice == 1) {
+
             } else {
-                System.out.println("You can't catch another trainer's pokemon!");
-                this.getCurrentPok().doStatusEffects(opponent);
+                if (opponent.getTrainer() == null) {
+                    int ballChoice = HelperMethods.getNumber("Which Poke Ball which you like to use?\n" + this.getBallDisplay() + "Enter a number from:", 1, this.pokeballs.size(), this);
+                    int i = 0;
+                    boolean caught = false;
+                    for (Map.Entry<CatchingBall, Integer> entry : this.pokeballs.entrySet()) {
+                        i++;
+                        if (i == ballChoice) {
+                            caught = this.attemptCatch(opponent, entry.getKey());
+                        }
+                    }
+                    if (!caught) {
+                        this.getCurrentPok().doStatusEffects(opponent);
+                    } else {
+                        this.getCurrentPok().addXp(opponent.getBaseXp(), false);
+                    }
+                } else {
+                    System.out.println("You can't catch another trainer's pokemon!");
+                    this.getCurrentPok().doStatusEffects(opponent);
+                }
             }
         } else if (choice == 4) {
 
@@ -128,7 +136,7 @@ public class User extends Trainer {
     public void switchPokemon() {
         boolean badPoke = true;
         while (badPoke) {
-            int choice = HelperMethods.getNumber("Which pokemon would you like to switch to?\n" + this.getTeamDisplay() + "\n", 1, 6);
+            int choice = HelperMethods.getNumber("Which pokemon would you like to switch to?\n" + this.getTeamDisplay() + "\n", 1, 6, this);
             if (this.getTeam()[choice - 1] == null) {
                 System.out.println("You don't have a pokemon in that slot");
             } else if (this.getTeam()[choice - 1].getHp() <= 0) {
@@ -221,4 +229,45 @@ public class User extends Trainer {
         return false;
     }
 
+    public HashMap<Potion, Integer> getPotions() {
+        return potions;
+    }
+
+    public void setPotions(HashMap<Potion, Integer> potions) {
+        this.potions = potions;
+    }
+
+    public void addPotion(Potion potion) {
+        this.addPotions(potion, 1);
+    }
+
+    public void addPotions(Potion potion, int num) {
+        if (this.potions.containsKey(potion)) {
+            this.potions.replace(potion, this.potions.get(potion) + num);
+        } else {
+            this.potions.put(potion, num);
+        }
+    }
+
+    public void removePotion(Potion potion) {
+        if (this.potions.containsKey(potion)) {
+            if (this.potions.get(potion) == 1) {
+                this.potions.remove(potion);
+            } else {
+                this.potions.replace(potion, this.potions.get(potion) - 1);
+            }
+        } else {
+            System.out.println("Something went wrong... (User.removePotion()) a potion was removed that didn't exist");
+        }
+    }
+
+    public String getPotionDisplay() {
+        String display = "";
+        int i = 1;
+        for (Map.Entry<Potion, Integer> entry : this.potions.entrySet()) {
+            display += (i + ") " + HelperMethods.getPotionDisplay(entry.getKey()) + ": " + entry.getValue() + "\n");
+            i++;
+        }
+        return display;
+    }
 }

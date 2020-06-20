@@ -1,4 +1,4 @@
-public class PokeBall extends CatchingBall {
+public enum PokeBall {
 
     public PokeBall() {
         this.setBaseCatchRate(1.0);

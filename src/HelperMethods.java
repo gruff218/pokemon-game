@@ -3,7 +3,7 @@ import java.math.RoundingMode;
 import java.util.*;
 
 public class HelperMethods {
-    public static int getNumber(String question, int min, int max) {
+    public static int getNumber(String question, int min, int max, User user) {
         /*while (true) {
             System.out.print(question + " (" + min + "-" + max + ")? ");
 
@@ -21,32 +21,40 @@ public class HelperMethods {
                 }
             }
         }*/
-        /*GameWindow.setLookingForKey(true);
+        GameWindow.setLookingForKey(true);
         System.out.println(question + " (" + min + "-" + max + ")? ");
+        GameWindow.setCurrentKey(null);
         int number = Integer.MAX_VALUE;
         while (number < min || number > max) {
             number = Integer.MAX_VALUE;
-            while (GameComponent.getCurrentKey() == null) {
+            while (GameWindow.getCurrentKey() == null) {
                 //System.out.println(GameComponent.getCurrentKey());
+                if (GameWindow.getCurrentCheatKey() != null) {
+                    if (GameWindow.getCurrentCheatKey() == 'L') {
+                        GameWindow.setCurrentCheatKey(null);
+                        user.getCurrentPok().addXp(user.getCurrentPok().getXpToNextLevel(), true);
+                    }
+                }
             }
             try {
-                number = Character.getNumericValue(GameComponent.getCurrentKey());
+                number = Character.getNumericValue(GameWindow.getCurrentKey());
             } catch (NullPointerException e) {
 
             }
             if (number < min || number > max) {
                 System.out.println("Your number needs to be between " + min + " and " + max + ".");
                 System.out.println(question + " (" + min + "-" + max + ")? ");
-                GameComponent.setCurrentKey(null);
+                GameWindow.setCurrentKey(null);
             }
         }
-        GameComponent.setCurrentKey(null);
+        GameWindow.setCurrentKey(null);
         GameWindow.setLookingForKey(false);
-        return number;*/
-        System.out.println(question + " (" + min + "-" + max + ")?");
+        return number;
+        /*System.out.println(question + " (" + min + "-" + max + ")?");
         int number = Integer.MAX_VALUE;
         GameWindow.getKeyRequests().add('À');
         int id = GameWindow.getKeyRequests().size() - 1;
+        System.out.println("id: " + id + " key requests: " + GameWindow.getKeyRequests());
         while (number < min || number > max) {
             number = Integer.MAX_VALUE;
             while (GameWindow.getKeyRequests().get(id) == 'À') {
@@ -64,6 +72,32 @@ public class HelperMethods {
             }
         }
         GameWindow.getKeyRequests().remove(id);
+        return number;*/
+    }
+
+    public static int getCheatNumber(String question, int min, int max, User user) {
+        GameWindow.setLookingForCheatKey(true);
+        System.out.println(question + " (" + min + "-" + max + ")? ");
+        GameWindow.setCurrentCheatKey(null);
+        int number = Integer.MAX_VALUE;
+        while (number < min || number > max) {
+            number = Integer.MAX_VALUE;
+            while (GameWindow.getCurrentCheatKey() == null) {
+                //System.out.println(GameComponent.getCurrentKey());
+            }
+            try {
+                number = Character.getNumericValue(GameWindow.getCurrentCheatKey());
+            } catch (NullPointerException e) {
+
+            }
+            if (number < min || number > max) {
+                System.out.println("Your number needs to be between " + min + " and " + max + ".");
+                System.out.println(question + " (" + min + "-" + max + ")? ");
+                GameWindow.setCurrentCheatKey(null);
+            }
+        }
+        GameWindow.setCurrentCheatKey(null);
+        GameWindow.setLookingForCheatKey(false);
         return number;
     }
 
@@ -246,4 +280,29 @@ public class HelperMethods {
         }
     }
 
+    public static double getPotionHealing(Potion potion) {
+        if (potion == Potion.POTION) {
+            return 20;
+        } else if (potion == Potion.SUPER_POTION) {
+            return 50;
+        } else if (potion == Potion.HYPER_POTION) {
+            return 200;
+        } else {
+            System.out.println("Something went wrong (getPotionHealing)");
+            return -1000;
+        }
+    }
+
+    public static String getPotionDisplay(Potion potion) {
+        if (potion == Potion.POTION) {
+            return "Potion";
+        } else if (potion == Potion.SUPER_POTION) {
+            return "Super Potion";
+        } else if (potion == Potion.HYPER_POTION) {
+            return "Hyper Potion";
+        } else {
+            System.out.println("Something went wrong (getPotionDisplay)");
+            return "";
+        }
+    }
 }
