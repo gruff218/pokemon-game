@@ -352,11 +352,14 @@ public class Pokemon {
         this.hp = this.hpStat;
     }
 
-    public void heal(double health) {
+    public double heal(double health) {
         this.hp += health;
         if (this.hp > this.hpStat) {
+            double healed = health - this.hp + this.hpStat;
             this.heal();
+            return healed;
         }
+        return health;
     }
 
     public void doAttack(Pokemon opponent, int choice) {

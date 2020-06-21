@@ -3,7 +3,7 @@ import java.util.Map;
 
 public class User extends Trainer {
 
-    private HashMap<CatchingBall, Integer> pokeballs;
+    private HashMap<PokeBall, Integer> pokeballs;
     private HashMap<Potion, Integer> potions;
     private boolean opponentCaught;
 
@@ -35,13 +35,23 @@ public class User extends Trainer {
         } else if (choice == 3) {
             int bagChoice = HelperMethods.getNumber("Would you like to open your health restores, or pokeballs?\nEnter a number from:", 1, 2, this);
             if (bagChoice == 1) {
+                int potionChoice = HelperMethods.getNumber("Which health restore would you like to use?\n" + this.getPotionDisplay() + "Enter a number from:", 1, this.potions.size(), this);
+                int pokChoice = HelperMethods.getNumber("Which pokemon would you like to use it on?\n" + this.getTeamDisplay() + "Enter a number from:", 1, 6, this) - 1;
+                int i = 0;
+                for (Map.Entry<Potion, Integer> entry : this.potions.entrySet()) {
+                    i++;
+                    if (i == potionChoice) {
+                        this.usePotion(pokChoice, entry.getKey());
+                    }
+                }
+                this.getCurrentPok().doStatusEffects(opponent);
 
             } else {
                 if (opponent.getTrainer() == null) {
                     int ballChoice = HelperMethods.getNumber("Which Poke Ball which you like to use?\n" + this.getBallDisplay() + "Enter a number from:", 1, this.pokeballs.size(), this);
                     int i = 0;
                     boolean caught = false;
-                    for (Map.Entry<CatchingBall, Integer> entry : this.pokeballs.entrySet()) {
+                    for (Map.Entry<PokeBall, Integer> entry : this.pokeballs.entrySet()) {
                         i++;
                         if (i == ballChoice) {
                             caught = this.attemptCatch(opponent, entry.getKey());
@@ -153,25 +163,35 @@ public class User extends Trainer {
 
     }
 
+    public void usePotion(int pokChoice, Potion potion) {
+        if (this.getTeam()[pokChoice] == null) {
+            System.out.println("You don't have a pokemon in that slot");
+            return;
+        }
+        System.out.println(this.getTeam()[pokChoice].getDisplay() + " has healed " + this.getTeam()[pokChoice].heal(HelperMethods.getPotionHealing(potion)) + " HP!");
+        this.removePotion(potion);
+    }
+
+
     @Override
     public void battleLost() {
         System.out.println("You have no remaining pokemon!");
 
     }
 
-    public HashMap<CatchingBall, Integer> getPokeballs() {
+    public HashMap<PokeBall, Integer> getPokeballs() {
         return pokeballs;
     }
 
-    public void setPokeballs(HashMap<CatchingBall, Integer> pokeballs) {
+    public void setPokeballs(HashMap<PokeBall, Integer> pokeballs) {
         this.pokeballs = pokeballs;
     }
 
-    public void addBall(CatchingBall ball) {
+    public void addBall(PokeBall ball) {
         this.addBalls(ball, 1);
     }
 
-    public void addBalls(CatchingBall ball, int num) {
+    public void addBalls(PokeBall ball, int num) {
         if (this.pokeballs.containsKey(ball)) {
             this.pokeballs.replace(ball, this.pokeballs.get(ball) + num);
         } else {
@@ -179,7 +199,7 @@ public class User extends Trainer {
         }
     }
 
-    public void removeBall(CatchingBall ball) {
+    public void removeBall(PokeBall ball) {
         if (this.pokeballs.containsKey(ball)) {
             if (this.pokeballs.get(ball) == 1) {
                 this.pokeballs.remove(ball);
@@ -194,19 +214,19 @@ public class User extends Trainer {
     public String getBallDisplay() {
         String display = "";
         int i = 1;
-        for (Map.Entry<CatchingBall, Integer> entry : this.pokeballs.entrySet()) {
-            display += (i + ") " + entry.getKey().getDisplay() + ": " + entry.getValue() + "\n");
+        for (Map.Entry<PokeBall, Integer> entry : this.pokeballs.entrySet()) {
+            display += (i + ") " + HelperMethods.getBallDisplay(entry.getKey()) + ": " + entry.getValue() + "\n");
             i++;
         }
         return display;
     }
 
-    public boolean attemptCatch(Pokemon opponent, CatchingBall ball) {
-        double temp = (int)(3 * opponent.getHpStat() - 2 * opponent.getHp()) * opponent.getCatchRate() * ball.getCatchMultiplier(opponent);
+    public boolean attemptCatch(Pokemon opponent, PokeBall ball) {
+        double temp = (int) (3 * opponent.getHpStat() - 2 * opponent.getHp()) * opponent.getCatchRate() * HelperMethods.getBallCatchRate(ball, opponent);
         double statusRate = HelperMethods.ailmentToCatchRate(opponent.getAilment());
-        int modifiedCatchRate = (int)(temp / (3 * opponent.getHpStat()) * statusRate);
+        int modifiedCatchRate = (int) (temp / (3 * opponent.getHpStat()) * statusRate);
         int shakeCount = 0;
-        int b = 1048560/(int)Math.sqrt(Math.sqrt((double)16711680/modifiedCatchRate));
+        int b = 1048560 / (int) Math.sqrt(Math.sqrt((double) 16711680 / modifiedCatchRate));
         System.out.println("b: " + b);
 
         while (shakeCount != 4) {
@@ -219,7 +239,7 @@ public class User extends Trainer {
                 break;
             }
         }
-
+        this.removeBall(ball);
         if (shakeCount == 4) {
             System.out.println(opponent.getDisplay() + " was added to your team!");
             this.addPoke(opponent);

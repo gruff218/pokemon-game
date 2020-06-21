@@ -305,4 +305,38 @@ public class HelperMethods {
             return "";
         }
     }
+
+    public static double getBallCatchRate(PokeBall ball, Pokemon opponent) {
+        if (ball == PokeBall.POKE_BALL) {
+            return 1.0;
+        } else if (ball == PokeBall.GREAT_BALL) {
+            return 1.5;
+        } else if (ball == PokeBall.ULTRA_BALL) {
+            return 2.0;
+        } else if (ball == PokeBall.FAST_BALL) {
+            if (opponent.getbSpdStat() >= 100) {
+                return 4.0;
+            } else {
+                return 1.0;
+            }
+        } else {
+            System.out.println("Something went wrong (getBallCatchRate)");
+            return -1000.0;
+        }
+    }
+
+    public static String getBallDisplay(PokeBall ball) {
+        if (ball == PokeBall.POKE_BALL) {
+            return "Poke Ball";
+        } else if (ball == PokeBall.GREAT_BALL) {
+            return "Great Ball";
+        } else if (ball == PokeBall.ULTRA_BALL) {
+            return "Ultra Ball";
+        } else if (ball == PokeBall.FAST_BALL) {
+            return "Fast Ball";
+        } else {
+            System.out.println("Something went wrong (getBallCatchRate)");
+            return "";
+        }
+    }
 }

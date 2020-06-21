@@ -49,7 +49,9 @@ public class GameWindow extends JFrame implements KeyListener, ActionListener {
         oppPokes[1] = pok4;
 
         User user = new User(userPokes, "Will");
-        user.addBalls(new PokeBall(), 5);
+        user.addBalls(PokeBall.POKE_BALL, 10);
+        user.addPotions(Potion.POTION, 10);
+        user.addPotions(Potion.SUPER_POTION, 5);
         Trainer opponent = new Trainer(oppPokes, "Trainer Billy");
 
         try {
